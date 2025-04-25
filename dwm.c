@@ -1490,8 +1490,7 @@ removesystrayicon(Client *i)
 	if (!showsystray || !i)
 		return;
 	for (ii = &systray->icons; *ii && *ii != i; ii = &(*ii)->next);
-	if (ii)
-		*ii = i->next;
+	*ii = i->next;
 	free(i);
 }
 
