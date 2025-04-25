@@ -1,5 +1,5 @@
 # dwm
-Marwatoo's build of DWM
+Marwatoo's build of DWM 6.4
 
 dwm - dynamic window manager
 ============================
