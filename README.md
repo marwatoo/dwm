@@ -1,7 +1,7 @@
 # dwm
 Marwatoo's build of DWM 6.4
 
-file:https://raw.githubusercontent.com/marwatoo/dwm/refs/heads/main/dwm1.png
+![dwm screenshot](https://raw.githubusercontent.com/marwatoo/dwm/refs/heads/main/dwm1.png)
 
 dwm - dynamic window manager
 ============================
