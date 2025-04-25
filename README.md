@@ -1,6 +1,8 @@
 # dwm
 Marwatoo's build of DWM 6.4
 
+file:https://raw.githubusercontent.com/marwatoo/dwm/refs/heads/main/dwm1.png
+
 dwm - dynamic window manager
 ============================
 dwm is an extremely fast, small, and dynamic window manager for X.
