@@ -99,27 +99,6 @@ static const Rule rules[] = {
 	{ "TelegramDesktop",    					NULL,       NULL,       1 << 6,       0,           -1 },
 };
 
-/* Autostart */
-//const char *const autostart[] = {
-//	"xrandr", "-s", "1600x900", NULL,
-//	"libinput-gestures-setup", "start", NULL,
-//	"nitrogen", "--restore", NULL,
-//	"setxkbmap", "-option", "grp:caps_toggle", "fr,ma", NULL,
-//	"lxpolkit", NULL,
-//	"/usr/lib/x86_64-linux-gnu/xfce4/notifyd/xfce4-notifyd", NULL,
-//	"volumeicon", NULL,
-//	"flameshot", NULL,
-//	"xfce4-clipman", NULL,
-//	"nm-tray", NULL,
-//	"xset", "b", "off", NULL,
-//	"fbxkb", NULL,
-//	"cbatticon", NULL,
-//	"picom", "--config", "~/.config/picom/dwm.conf", NULL,
-//	"~/.config/dwm/infolite.sh", NULL,
-//	"~/.config/bspwm/kde.sh", NULL,
-//	NULL /* terminate */
-//};
-
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
