@@ -1468,12 +1468,6 @@ propertynotify(XEvent *e)
 	}
 }
 
-//void
-//quit(const Arg *arg)
-//{
-//	running = 0;
-//}
-
 Monitor *
 recttomon(int x, int y, int w, int h)
 {
@@ -1998,6 +1992,7 @@ tagmon(const Arg *arg)
 	sendmon(selmon->sel, dirtomon(arg->i));
 }
 
+
 void
 tile(Monitor *m)
 {
@@ -2025,63 +2020,6 @@ tile(Monitor *m)
 				ty += HEIGHT(c) + m->gappx;
 		}
 }
-
-// void
-// tile(Monitor *m)
-// {
-//     unsigned int i, n, h, mw, my, ty;
-//     Client *c;
-//
-//     // Count the number of tiled windows
-//     for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-//     if (n == 0)
-//         return;
-//
-//     // Calculate master window width
-//     if (n > m->nmaster)
-//         mw = m->nmaster ? m->ww * m->mfact : 0;
-//     else
-//         mw = m->ww - m->gappx;
-//
-//     // Adjust for windows in the master section
-//     for (i = 0, my = ty = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
-//     {
-//         if (i < m->nmaster)
-//         {
-//             // Adjust the height calculation for the master windows
-//             if (MIN(n, m->nmaster) - i > 0)
-//                 h = (m->wh - my) / (MIN(n, m->nmaster) - i) - m->gappx;
-//             else
-//                 h = m->wh - my - m->gappx;
-//
-//             h = MAX(h, 10);  // Ensure a minimum height for windows
-//
-//             // Resize the master window
-//             resize(c, m->wx + m->gappx, m->wy + my, mw - (2 * c->bw) - m->gappx, h - (2 * c->bw), 0);
-//
-//             // Update the position for the next window in the master section
-//             if (my + HEIGHT(c) + m->gappx < m->wh)
-//                 my += HEIGHT(c) + m->gappx;
-//         }
-//         else
-//         {
-//             // Adjust the height calculation for stack windows
-//             if (n - i > 0)
-//                 h = (m->wh - ty) / (n - i) - m->gappx;
-//             else
-//                 h = m->wh - ty - m->gappx;
-//
-//             h = MAX(h, 10);  // Ensure a minimum height for windows
-//
-//             // Resize the stack window
-//             resize(c, m->wx + mw + m->gappx, m->wy + ty, m->ww - mw - (2 * c->bw) - 2 * m->gappx, h - (2 * c->bw), 0);
-//
-//             // Update the position for the next window in the stack
-//             if (ty + HEIGHT(c) + m->gappx < m->wh)
-//                 ty += HEIGHT(c) + m->gappx;
-//         }
-//     }
-// }
 
 
 void
