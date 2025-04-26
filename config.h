@@ -137,6 +137,7 @@ static const char *const autostart[] = {
     "fbxkb",
     "cbatticon",
 	"kdeconnect-indicator",
+	"slstustus",
     NULL /* terminate */
 };
 
