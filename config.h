@@ -62,15 +62,12 @@ static const char col_drac10[] = "#f1fa8c";  // Yellow
 // Define color scheme for dwm
 static const char *colors[][3] = {
     /*               fg          bg          border  */
-    // [SchemeNorm] = { col_nord4,  col_nord0,  col_nord2 },  // Unfocused window
-    // [SchemeSel]  = { col_nord6,  col_nord9,  col_nord8 },  // Focused window
     [SchemeNorm] = { col_drac3,  col_drac0,  col_drac1 },  // Unfocused window (Dracula Default)
     [SchemeSel]  = { col_drac3,  col_drac8,  col_drac7 },  // Focused window (Dracula Default)
 };
 
 
 /* tagging */
-// static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
  static const char *tags[] = { "", "", "", "", "", "", "", "󰅱", "" };
 
 static const Rule rules[] = {
