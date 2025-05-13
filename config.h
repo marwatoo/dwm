@@ -123,7 +123,7 @@ static const Layout layouts[] = {
 /* autostart */
 static const char *const autostart[] = {
     "nitrogen --restore",
-    "xrandr -s 1600x900",
+    //"xrandr -s 1600x900",
     "picom --config ~/.config/picom/dwm.conf",
     "libinput-gestures-setup start",
     "setxkbmap -option grp:caps_toggle fr,ma",
