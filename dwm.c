@@ -187,14 +187,14 @@ static Monitor *createmon(void);
 static void destroynotify(XEvent *e);
 static void detach(Client *c);
 static void detachstack(Client *c);
-static Monitor *dirtomon(int dir);
+//static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m);
 static void drawbars(void);
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c);
 static void focusin(XEvent *e);
-static void focusmon(const Arg *arg);
+//static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
 static int getrootptr(int *x, int *y);
@@ -231,7 +231,7 @@ static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
-static void setgaps(const Arg *arg);
+//static void setgaps(const Arg *arg);
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
@@ -242,7 +242,7 @@ static void sigchld(int unused);
 static void spawn(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
-static void tagmon(const Arg *arg);
+//static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
@@ -272,6 +272,7 @@ static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
+static void shifttag(const Arg *arg);
 
 /* variables */
 static Systray *systray = NULL;
@@ -833,21 +834,21 @@ detachstack(Client *c)
 	}
 }
 
-Monitor *
-dirtomon(int dir)
-{
-	Monitor *m = NULL;
-
-	if (dir > 0) {
-		if (!(m = selmon->next))
-			m = mons;
-	} else if (selmon == mons)
-		for (m = mons; m->next; m = m->next);
-	else
-		for (m = mons; m->next != selmon; m = m->next);
-	return m;
-}
-
+//Monitor *
+//dirtomon(int dir)
+//{
+//	Monitor *m = NULL;
+//
+//	if (dir > 0) {
+//		if (!(m = selmon->next))
+//			m = mons;
+//	} else if (selmon == mons)
+//		for (m = mons; m->next; m = m->next);
+//	else
+//		for (m = mons; m->next != selmon; m = m->next);
+//	return m;
+//}
+//
 void
 drawbar(Monitor *m)
 {
@@ -1002,19 +1003,19 @@ focusin(XEvent *e)
 		setfocus(selmon->sel);
 }
 
-void
-focusmon(const Arg *arg)
-{
-	Monitor *m;
-
-	if (!mons->next)
-		return;
-	if ((m = dirtomon(arg->i)) == selmon)
-		return;
-	unfocus(selmon->sel, 0);
-	selmon = m;
-	focus(NULL);
-}
+//void
+//focusmon(const Arg *arg)
+//{
+//	Monitor *m;
+//
+//	if (!mons->next)
+//		return;
+//	if ((m = dirtomon(arg->i)) == selmon)
+//		return;
+//	unfocus(selmon->sel, 0);
+//	selmon = m;
+//	focus(NULL);
+//}
 
 void
 focusstack(const Arg *arg)
@@ -1785,15 +1786,15 @@ setfullscreen(Client *c, int fullscreen)
 	}
 }
 
-void
-setgaps(const Arg *arg)
-{
-	if ((arg->i == 0) || (selmon->gappx + arg->i < 0))
-		selmon->gappx = 0;
-	else
-		selmon->gappx += arg->i;
-	arrange(selmon);
-}
+//void
+//setgaps(const Arg *arg)
+//{
+//	if ((arg->i == 0) || (selmon->gappx + arg->i < 0))
+//		selmon->gappx = 0;
+//	else
+//		selmon->gappx += arg->i;
+//	arrange(selmon);
+//}
 
 void
 setlayout(const Arg *arg)
@@ -1981,13 +1982,13 @@ tag(const Arg *arg)
 	}
 }
 
-void
-tagmon(const Arg *arg)
-{
-	if (!selmon->sel || !mons->next)
-		return;
-	sendmon(selmon->sel, dirtomon(arg->i));
-}
+//void
+//tagmon(const Arg *arg)
+//{
+//	if (!selmon->sel || !mons->next)
+//		return;
+//	sendmon(selmon->sel, dirtomon(arg->i));
+//}
 
 
 void
@@ -2193,6 +2194,27 @@ updateclientlist()
 				XA_WINDOW, 32, PropModeAppend,
 				(unsigned char *) &(c->win), 1);
 }
+
+void
+shifttag(const Arg *arg)
+{
+    if (!selmon->sel)
+        return;
+
+    unsigned int t = selmon->sel->tags;
+
+    /* number of tags in your setup */
+    const int numtags = 9;  // change this if you have fewer/more tags
+
+    if (arg->i > 0)
+        t = (t << arg->i) | (t >> (numtags - arg->i));
+    else
+        t = (t >> (-arg->i)) | (t << (numtags + arg->i));
+
+    Arg a = { .ui = t };
+    tag(&a);
+}
+
 
 int
 updategeom(void)
