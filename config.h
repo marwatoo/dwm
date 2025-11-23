@@ -15,7 +15,7 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "JetBrainsMonoNL NFP:style=Bold:size=11", "Noto Sans Arabic:size=11:style=Bold" };
+static const char *fonts[]          = { "JetBrainsMonoNL NFP:style=Bold:size=11", "Noto Sans Arabic:size=11:style=Bold","Noto Color Emoji:size=11" };
 //static const char dmenufont[]       = "JetBrainsMonoNL NFP:size=11";
 static const char col_gray1[]       = "#232629";  // Breeze background
 static const char col_gray2[]       = "#31363B";  // Darker accent (unfocused border)
@@ -149,6 +149,8 @@ static const Layout layouts[] = {
 /* autostart */
 static const char *const autostart[] = {
     "nitrogen --restore",
+    "/home/marwa/.config/dwm/setgamma.sh",
+    "/home/marwa/.config/dwm/gamma.sh",
     "picom --config ~/.config/picom/dwm.conf",
     "libinput-gestures-setup start",
     "setxkbmap -option grp:caps_toggle fr,ma",
