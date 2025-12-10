@@ -72,7 +72,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel }; /* color schemes */
+enum { SchemeNorm, SchemeTitle, SchemeSel, SchemeTag, SchemeTagSel, SchemeTagUrg, SchemeTagEmpty, SchemeTagUnderline, SchemeTagUrgUnderline, SchemeTagUnderlineSel }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
@@ -164,6 +164,9 @@ struct Systray {
 };
 
 /* function declarations */
+static void fibonacci(Monitor *mon, int s);
+static void dwindle(Monitor *mon);
+static void spiral(Monitor *mon);
 static void applyrules(Client *c);
 static void apply_fribidi(char *str);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
@@ -184,7 +187,6 @@ static Monitor *createmon(void);
 static void destroynotify(XEvent *e);
 static void detach(Client *c);
 static void detachstack(Client *c);
-static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m);
 static void drawbars(void);
 static int drawstatusbar(Monitor *m, int bh, char* text);
@@ -192,7 +194,9 @@ static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c);
 static void focusin(XEvent *e);
-static void focusmon(const Arg *arg);
+static void enqueue(Client *c);
+static void enqueuestack(Client *c);
+static void rotatestack(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
 static int getrootptr(int *x, int *y);
@@ -213,7 +217,6 @@ static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *c);
 static void propertynotify(XEvent *e);
-static void quit(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
 static void removesystrayicon(Client *i);
 static void resize(Client *c, int x, int y, int w, int h, int interact);
@@ -229,7 +232,6 @@ static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
-static void setgaps(const Arg *arg);
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
@@ -240,7 +242,6 @@ static void showhide(Client *c);
 static void spawn(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
-static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
@@ -321,7 +322,9 @@ struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 static pid_t *autostart_pids;
 static size_t autostart_len;
 
-/* execute command from autostart array */
+/* function implementations */
+
+// execute command from autostart array
 static void
 autostart_exec() {
 	const char *const *p;
@@ -345,9 +348,60 @@ autostart_exec() {
 	}
 }
 
+void
+enqueue(Client *c)
+{
+	Client *l;
+	for (l = c->mon->clients; l && l->next; l = l->next);
+	if (l) {
+		l->next = c;
+		c->next = NULL;
+	}
+}
 
+void
+enqueuestack(Client *c)
+{
+	Client *l;
+	for (l = c->mon->stack; l && l->snext; l = l->snext);
+	if (l) {
+		l->snext = c;
+		c->snext = NULL;
+	}
+}
 
-/* function implementations */
+void
+rotatestack(const Arg *arg)
+{
+	Client *c = NULL, *f;
+
+	if (!selmon->sel)
+		return;
+	f = selmon->sel;
+	if (arg->i > 0) {
+		for (c = nexttiled(selmon->clients); c && nexttiled(c->next); c = nexttiled(c->next));
+		if (c){
+			detach(c);
+			attach(c);
+			detachstack(c);
+			attachstack(c);
+		}
+	} else {
+		if ((c = nexttiled(selmon->clients))){
+			detach(c);
+			enqueue(c);
+			detachstack(c);
+			enqueuestack(c);
+		}
+	}
+	if (c){
+		arrange(selmon);
+		//unfocus(f, 1);
+		focus(f);
+		restack(selmon);
+	}
+}
+
 void
 applyrules(Client *c)
 {
@@ -543,6 +597,16 @@ buttonpress(XEvent *e)
 	Monitor *m;
 	XButtonPressedEvent *ev = &e->xbutton;
 
+	/* menu icon click */
+	if (myshowicon) {
+		int iw = TEXTW(myicon);
+		if (ev->x < iw) {
+			spawn(&(const Arg){ .v = (const char *[]){ myiconcmd, NULL }});
+			return;
+		}
+		ev->x -= iw;
+	}
+	
 	click = ClkRootWin;
 	/* focus monitor if necessary */
 	if ((m = wintomon(ev->window)) && m != selmon) {
@@ -861,21 +925,6 @@ detachstack(Client *c)
 	}
 }
 
-Monitor *
-dirtomon(int dir)
-{
-	Monitor *m = NULL;
-
-	if (dir > 0) {
-		if (!(m = selmon->next))
-			m = mons;
-	} else if (selmon == mons)
-		for (m = mons; m->next; m = m->next);
-	else
-		for (m = mons; m->next != selmon; m = m->next);
-	return m;
-}
-
 int
 drawstatusbar(Monitor *m, int bh, char* stext) {
 	int ret, i, w, x, len;
@@ -988,70 +1037,119 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 void
 drawbar(Monitor *m)
 {
-	int x, w, tw = 0, stw = 0;
-	int boxs = drw->fonts->h / 9;
-	int boxw = drw->fonts->h / 6 + 2;
-	unsigned int i, occ = 0, urg = 0;
-	Client *c;
+    int x, w, tw = 0, stw = 0;
+    int boxs = drw->fonts->h / 9;
+    int boxw = drw->fonts->h / 6 + 2;
+    unsigned int i, occ = 0, urg = 0;
+    Client *c;
 
-	if (!m->showbar)
-		return;
+    if (!m->showbar)
+        return;
 
-	if(showsystray && m == systraytomon(m) && !systrayonleft)
-		stw = getsystraywidth();
+    if (showsystray && m == systraytomon(m) && !systrayonleft)
+        stw = getsystraywidth();
 
-	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon) { /* status is only drawn on selected monitor */
-		tw = m->ww - drawstatusbar(m, bh, stext);
-	}
+    /* draw status first */
+    if (m == selmon) {
+        tw = m->ww - drawstatusbar(m, bh, stext);
+    }
 
-	resizebarwin(m);
-	for (c = m->clients; c; c = c->next) {
-		occ |= c->tags;
-		if (c->isurgent)
-			urg |= c->tags;
-	}
-	x = 0;
-	for (i = 0; i < LENGTH(tags); i++) {
-		char tlabel[16];
+    resizebarwin(m);
 
-		/* Show number if empty, else keep icon */
-		if (!(occ & 1 << i) && !(m->tagset[m->seltags] & 1 << i))
-			//snprintf(tlabel, sizeof tlabel, "%d", i + 1);
-			snprintf(tlabel, sizeof tlabel, "%s", tags2[i]);
-		else
-			snprintf(tlabel, sizeof tlabel, "%s", tags[i]);
+    /* compute occupied and urgent tags */
+    for (c = m->clients; c; c = c->next) {
+        occ |= c->tags;
+        if (c->isurgent)
+            urg |= c->tags;
+    }
 
-		w = TEXTW(tlabel);
-		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tlabel, urg & 1 << i);
+    x = 0;
 
-		/* underline: selected OR occupied (but not selected) */
-		if (m->tagset[m->seltags] & 1 << i || occ & 1 << i)
-			drw_rect(drw, x, bh - ulinestroke - ulinevoffset, w, ulinestroke, 1, 0);
+    /* draw custom menu icon */
+    if (myshowicon) {
+        int iw = myiconw ? myiconw : TEXTW(myicon);
+        drw_text(drw, x, 0, iw, bh, lrpad / 2, myicon, 0);
+        x += iw;
+    }
 
-		x += w;
-	}
-	w = TEXTW(m->ltsymbol);
-	drw_setscheme(drw, scheme[SchemeNorm]);
-	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+    /* draw tags */
+    for (i = 0; i < LENGTH(tags); i++) {
+        char tlabel[16];
 
+        /* show number if empty, else keep icon */
+        if (!(occ & 1 << i) && !(m->tagset[m->seltags] & 1 << i))
+            snprintf(tlabel, sizeof tlabel, "%s", tags2[i]);
+        else
+            snprintf(tlabel, sizeof tlabel, "%s", tags[i]);
+
+        w = TEXTW(tlabel);
+
+        /* select tag scheme for text */
+        if (urg & 1 << i) {
+            drw_setscheme(drw, scheme[SchemeTagUrg]);
+        } else if (m->tagset[m->seltags] & 1 << i) {
+            drw_setscheme(drw, scheme[SchemeTagSel]);
+        } else if (occ & 1 << i) {
+            drw_setscheme(drw, scheme[SchemeTag]);
+        } else {
+            drw_setscheme(drw, scheme[SchemeTagEmpty]);
+        }
+
+        /* draw tag text */
+        drw_text(drw, x, 0, w, bh, lrpad / 2, tlabel, 0);
+
+        /* draw underline if selected/occupied or urgent */
+        if (m->tagset[m->seltags] & 1 << i || occ & 1 << i || urg & 1 << i) {
+            if (urg & 1 << i) {
+                drw_setscheme(drw, scheme[SchemeTagUrgUnderline]);
+            } else if (m->tagset[m->seltags] & 1 << i) {
+                drw_setscheme(drw, scheme[SchemeTagUnderlineSel]);  // white underline
+            } else {
+                drw_setscheme(drw, scheme[SchemeTagUnderline]);     // blue underline
+            }
+            drw_rect(drw, x, bh - ulinestroke - ulinevoffset, w, ulinestroke, 1, 0);
+        }
+
+        x += w;
+    }
+
+    /* draw layout symbol */
+    w = TEXTW(m->ltsymbol);
+    drw_setscheme(drw, scheme[SchemeNorm]);
+    x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+
+	/* draw window title (centered inside available space) */
 	if ((w = m->ww - tw - stw - x) > bh) {
 		if (m->sel) {
-		    //int mid = (m->ww - (int)TEXTW(m->sel->name)) / 2 - x;
-		    //mid = mid >= lrpad / 2 ? mid : lrpad / 2;
-			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
-			apply_fribidi(m->sel->name);
-			drw_text(drw, x, 0, w - 2 * sp, bh, lrpad / 2, fribidi_text, 0);
+			/* width of title text */
+			int titlew = TEXTW(m->sel->name);
+
+			/* compute center of the free space (between tags and status) */
+			int mid = (w - titlew) / 2;
+
+			/* prevent clipping on the left */
+			if (mid < lrpad / 2)
+				mid = lrpad / 2;
+
+			drw_setscheme(drw, scheme[m == selmon ? SchemeTitle : SchemeNorm]);
+
+			apply_fribidi(m->sel->name); // if using fribidi
+
+			/* draw title text with offset "mid" inside free area */
+			drw_text(drw, x, 0, w - 2 * sp, bh, mid, fribidi_text, 0);
+
+			/* floating indicator */
 			if (m->sel->isfloating)
 				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
+
 		} else {
 			drw_setscheme(drw, scheme[SchemeNorm]);
 			drw_rect(drw, x, 0, w - 2 * sp, bh, 1, 1);
 		}
 	}
-	drw_map(drw, m->barwin, 0, 0, m->ww - stw, bh);
+    drw_map(drw, m->barwin, 0, 0, m->ww - stw, bh);
 }
+
 
 void
 drawbars(void)
@@ -1127,20 +1225,6 @@ focusin(XEvent *e)
 
 	if (selmon->sel && ev->window != selmon->sel->win)
 		setfocus(selmon->sel);
-}
-
-void
-focusmon(const Arg *arg)
-{
-	Monitor *m;
-
-	if (!mons->next)
-		return;
-	if ((m = dirtomon(arg->i)) == selmon)
-		return;
-	unfocus(selmon->sel, 0);
-	selmon = m;
-	focus(NULL);
 }
 
 void
@@ -1606,22 +1690,6 @@ propertynotify(XEvent *e)
 	}
 }
 
-void
-quit(const Arg *arg)
-{
-	size_t i;
-
-	/* kill child processes */
-	for (i = 0; i < autostart_len; i++) {
-		if (0 < autostart_pids[i]) {
-			kill(autostart_pids[i], SIGTERM);
-			waitpid(autostart_pids[i], NULL, 0);
-		}
-	}
-
-	running = 0;
-}
-
 Monitor *
 recttomon(int x, int y, int w, int h)
 {
@@ -1958,16 +2026,6 @@ setfullscreen(Client *c, int fullscreen)
 }
 
 void
-setgaps(const Arg *arg)
-{
-	if ((arg->i == 0) || (selmon->gappx + arg->i < 0))
-		selmon->gappx = 0;
-	else
-		selmon->gappx += arg->i;
-	arrange(selmon);
-}
-
-void
 setlayout(const Arg *arg)
 {
 	if (!arg || !arg->v || arg->v != selmon->lt[selmon->sellt])
@@ -2165,14 +2223,6 @@ tag(const Arg *arg)
 }
 
 void
-tagmon(const Arg *arg)
-{
-	if (!selmon->sel || !mons->next)
-		return;
-	sendmon(selmon->sel, dirtomon(arg->i));
-}
-
-void
 tile(Monitor *m)
 {
 	unsigned int i, n, h, mw, my, ty;
@@ -2199,29 +2249,6 @@ tile(Monitor *m)
 				ty += HEIGHT(c) + m->gappx;
 		}
 }
-
-//in case if the new togglebar have issues (some weird artifact in the new one)
-//the old one doesnt get systray position right for the first 1or2sec, i guess it's much better with the second one
-//void
-//togglebar(const Arg *arg)
-//{
-//	selmon->showbar = !selmon->showbar;
-//	updatebarpos(selmon);
-//	resizebarwin(selmon);
-//	if (showsystray) {
-//		XWindowChanges wc;
-//		if (!selmon->showbar)
-//			wc.y = -bh;
-//		else if (selmon->showbar) {
-//			wc.y = 0;
-//			if (!selmon->topbar)
-//				wc.y = selmon->mh - bh;
-//		}
-//		XConfigureWindow(dpy, systray->win, CWY, &wc);
-//	}
-//	XMoveResizeWindow(dpy, selmon->barwin, selmon->wx + sp, selmon->by + vp, selmon->ww - 2 * sp, bh);
-//	arrange(selmon);
-//}
 
 void
 togglebar(const Arg *arg)
@@ -2756,6 +2783,115 @@ wintosystrayicon(Window w) {
 	return i;
 }
 
+void
+fibonacci(Monitor *mon, int s)
+{
+    unsigned int i, n, nx, ny, nw, nh;
+    Client *c;
+
+    /* Count clients */
+    for (n = 0, c = nexttiled(mon->clients); c; c = nexttiled(c->next), n++);
+    if (n == 0)
+        return;
+
+    /* Single client case */
+    if (n == 1) {
+        c = nexttiled(mon->clients);
+        resize(
+            c,
+            mon->wx + mon->gappx,
+            mon->wy + mon->gappx,
+            (mon->ww - 2 * c->bw) - 2 * mon->gappx,
+            (mon->wh - 2 * c->bw) - 2 * mon->gappx,
+            0
+        );
+        return;
+    }
+
+    nx = mon->wx;
+    ny = mon->gappx;
+    nw = mon->ww;
+    nh = mon->wh;
+
+    for (i = 0, c = nexttiled(mon->clients); c; c = nexttiled(c->next)) {
+
+        if ((i % 2 && nh / 2 > 2 * c->bw)
+        ||  (!(i % 2) && nw / 2 > 2 * c->bw)) {
+
+            if (i < n - 1) {
+                if (i % 2)
+                    nh /= 2;
+                else
+                    nw /= 2;
+
+                if ((i % 4) == 2 && !s)
+                    nx += nw;
+                else if ((i % 4) == 3 && !s)
+                    ny += nh;
+            }
+
+            if ((i % 4) == 0) {
+                if (s)
+                    ny += nh;
+                else
+                    ny -= nh;
+            } else if ((i % 4) == 1) {
+                nx += nw;
+            } else if ((i % 4) == 2) {
+                ny += nh;
+            } else if ((i % 4) == 3) {
+                if (s)
+                    nx += nw;
+                else
+                    nx -= nw;
+            }
+
+            if (i == 0) {
+                if (n != 1)
+                    nw = mon->ww * mon->mfact;
+                ny = mon->wy + mon->gappx;
+            } else if (i == 1) {
+                nw = mon->ww - nw - mon->gappx;
+            }
+
+            i++;
+        }
+
+        if ((s == 0 && i <= 4 && (i != 2 || n == 2))
+        ||  (s == 1 && (i % 2 == 1 || i == n))) {
+            resize(
+                c,
+                nx + mon->gappx,
+                ny,
+                nw - 2 * c->bw - mon->gappx,
+                nh - 2 * c->bw - 2 * mon->gappx,
+                False
+            );
+        } else {
+            resize(
+                c,
+                nx + mon->gappx,
+                ny,
+                nw - 2 * c->bw - mon->gappx,
+                nh - 2 * c->bw - mon->gappx,
+                False
+            );
+        }
+    }
+}
+
+void
+dwindle(Monitor *mon)
+{
+	fibonacci(mon, 1);
+}
+
+void
+spiral(Monitor *mon)
+{
+	fibonacci(mon, 0);
+}
+
 Monitor *
 wintomon(Window w)
 {
@@ -2840,7 +2976,6 @@ zoom(const Arg *arg)
 int
 main(int argc, char *argv[])
 {
-	//setenv("QT_LOGGING_RULES", "qt.qpa.*=false", 1);
 	if (argc == 2 && !strcmp("-v", argv[1]))
 		die("dwm-"VERSION);
 	else if (argc != 1)
