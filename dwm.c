@@ -606,14 +606,17 @@ buttonpress(XEvent *e)
 		}
 		ev->x -= iw;
 	}
-	
+
 	click = ClkRootWin;
+
 	/* focus monitor if necessary */
-	if ((m = wintomon(ev->window)) && m != selmon) {
+	if ((m = wintomon(ev->window)) && m != selmon
+	    && (focusonwheel || (ev->button != Button4 && ev->button != Button5))) {
 		unfocus(selmon->sel, 1);
 		selmon = m;
 		focus(NULL);
 	}
+
 	if (ev->window == selmon->barwin) {
 		i = x = 0;
 		do
@@ -628,17 +631,25 @@ buttonpress(XEvent *e)
 			click = ClkStatusText;
 		else
 			click = ClkWinTitle;
+
 	} else if ((c = wintoclient(ev->window))) {
-		focus(c);
-		restack(selmon);
+		/* focus client unless wheel scroll and focusonwheel is disabled */
+		if (focusonwheel || (ev->button != Button4 && ev->button != Button5))
+			focus(c);
+
 		XAllowEvents(dpy, ReplayPointer, CurrentTime);
 		click = ClkClientWin;
 	}
+
 	for (i = 0; i < LENGTH(buttons); i++)
-		if (click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
+		if (click == buttons[i].click
+		&& buttons[i].func
+		&& buttons[i].button == ev->button
 		&& CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
-			buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+			buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0
+			                ? &arg : &buttons[i].arg);
 }
+
 
 void
 checkotherwm(void)
@@ -1167,6 +1178,9 @@ enternotify(XEvent *e)
 	Monitor *m;
 	XCrossingEvent *ev = &e->xcrossing;
 
+	if (!focusonwheel)
+		return;
+
 	if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
 		return;
 	c = wintoclient(ev->window);
@@ -1555,6 +1569,9 @@ motionnotify(XEvent *e)
 	static Monitor *mon = NULL;
 	Monitor *m;
 	XMotionEvent *ev = &e->xmotion;
+
+	if (!focusonwheel)
+		return;
 
 	if (ev->window != root)
 		return;
@@ -2217,6 +2234,7 @@ tag(const Arg *arg)
 {
 	if (selmon->sel && arg->ui & TAGMASK) {
 		selmon->sel->tags = arg->ui & TAGMASK;
+		view(arg);
 		focus(NULL);
 		arrange(selmon);
 	}

@@ -61,12 +61,13 @@ static const char 				col_breeze9[]  			= "#F67400";  // Orange (warning)
 static const char 				col_breeze10[] 			= "#C1D72E";  // Yellow/green (attention)
 static const char 				col_breeze11[] 			= "#27AE60";  // Green (success)
 static const char 				col_breeze12[] 			= "#9B59B6";  // Purple (special case)
+static const char 				col_breeze13[] 			= "#FFB86C";  // orange (title)
 
 /* Active colors */
 static const char 				*colors[][3] 			= {
     /*							fg            		bg            	border   */
     [SchemeNorm]     			= { col_breeze4, 	col_breeze0, 	col_breeze2 }, // unfocused window
-	[SchemeTitle]     			= { col_breeze5, 	col_breeze0, 	col_breeze2 }, // Window title
+	[SchemeTitle]     			= { col_breeze13, 	col_breeze0, 	col_breeze2 }, // Window title
     [SchemeSel]      			= { col_breeze5, 	col_breeze7, 	col_breeze7 }, // focused window
     [SchemeTag]      			= { col_breeze7, 	col_breeze0, 	col_breeze2 }, // normal tag
     [SchemeTagSel]   			= { col_breeze4, 	col_breeze7, 	col_breeze5 }, // selected tag
@@ -90,7 +91,6 @@ static const char *const 		autostart[] 			= {
     "xset", "b", "off", NULL,
     "megasync", NULL,
     "slstatus", NULL,
-	//"dwmblocks", NULL,
     "xfce4-screensaver", NULL,
     "xfce4-power-manager", NULL,
     "/home/marwa/.config/dwm/rkde.sh", NULL,
@@ -146,19 +146,22 @@ static const int 				resizehints 			= 0;    /* 1 means respect size hints in til
 static const int 				lockfullscreen 			= 1; /* 1 will force focus on the fullscreen window */
 
 /* Layouts */
-static const Layout 		layouts[] 					= {
-	/* symbol     arrange function */
-	{ "󰯴",      dwindle },   /* first entry is default */
-	{ "󰰤",      tile },    
-	{ "󰰏",      monocle },
-	{ "󰰰",      NULL },    /* no layout function means floating behavior */
-	{ "󰰡",      spiral },
+static const Layout 			layouts[] 					= {
+	/* symbol     		    	arrange function */
+	{ "󰯴",      				 dwindle },   /* first entry is default */
+	{ "󰰤",      				 tile },    
+	{ "󰰏",      				 monocle },
+	{ "󰰰",      				 NULL },    /* no layout function means floating behavior */
+	{ "󰰡",      				 spiral },
 };
 
 /* Commands */
 static char 					dmenumon[2] 			= "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char 				*dmenucmd[] 			= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char 				*termcmd[]  			= { "xfce4-terminal", NULL };
+
+/* Focus window on hover*/
+static const int 				focusonwheel       		= 0; //O means false
 
 /* Keys combinitions */
 static const Key 				keys[] 					= {
@@ -195,15 +198,15 @@ static const Key 				keys[] 					= {
     { 0,                            XK_F7,     view,          	{.i = 1 << 6} },
     { 0,                            XK_F8,     view,          	{.i = 1 << 7} },
     { 0,                            XK_F9,     view,          	{.i = 1 << 8} },
-    { MODKEY|ShiftMask,             XK_1,      tag,             {.ui = 1 << 0} },
-    { MODKEY|ShiftMask,             XK_2,      tag,             {.ui = 1 << 1} },
-    { MODKEY|ShiftMask,             XK_3,      tag,             {.ui = 1 << 2} },
-    { MODKEY|ShiftMask,             XK_4,      tag,             {.ui = 1 << 3} },
-    { MODKEY|ShiftMask,             XK_5,      tag,             {.ui = 1 << 4} },
-    { MODKEY|ShiftMask,             XK_6,      tag,             {.ui = 1 << 5} },
-    { MODKEY|ShiftMask,             XK_7,      tag,             {.ui = 1 << 6} },
-    { MODKEY|ShiftMask,             XK_8,      tag,             {.ui = 1 << 7} },
-    { MODKEY|ShiftMask,             XK_9,      tag,             {.ui = 1 << 8} },
+    { ShiftMask,             		XK_F1,      tag,        	{.ui = 1 << 0} },
+    { ShiftMask,             		XK_F2,      tag,        	{.ui = 1 << 1} },
+    { ShiftMask,             		XK_F3,      tag,        	{.ui = 1 << 2} },
+    { ShiftMask,           			XK_F4,      tag,        	{.ui = 1 << 3} },
+    { ShiftMask,           			XK_F5,      tag,        	{.ui = 1 << 4} },
+    { ShiftMask,           			XK_F6,      tag,        	{.ui = 1 << 5} },
+    { ShiftMask,           			XK_F7,      tag,        	{.ui = 1 << 6} },
+    { ShiftMask,           			XK_F8,      tag,        	{.ui = 1 << 7} },
+    { ShiftMask,           			XK_F9,      tag,        	{.ui = 1 << 8} },
     { MODKEY|ShiftMask,             XK_r,      spawn,          	SHCMD("~/.config/dwm/gamma.sh") },
 	{ MODKEY,             			XK_l,      spawn,          	SHCMD("~/.config/rofi/powermenu/type-2/powermenu.sh") },
 	{ MODKEY,             			XK_q,      spawn,          	SHCMD("~/.config/rofi/launchers/type-1/launcher.sh") },
@@ -225,15 +228,6 @@ static const Key 				keys[] 					= {
 	{ 0,			XF86XK_MonBrightnessDown,  spawn,			SHCMD("~/.config/openbox/scripts/brightness.sh -0.1") },
 	{ 0,			XF86XK_AudioMute,          spawn,			SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle") },
 	{ 0,			XF86XK_AudioMicMute,       spawn,			SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle") },
-	{ MODKEY, 						XK_F1,	   tag, 			{.i = 1 << 0} },
-	{ MODKEY, 						XK_F2,	   tag, 			{.i = 1 << 1} },
-	{ MODKEY, 						XK_F3,	   tag, 			{.i = 1 << 2} },
-	{ MODKEY, 						XK_F4,	   tag, 			{.i = 1 << 3} },
-	{ MODKEY, 						XK_F5, 	   tag, 			{.i = 1 << 4} },
-	{ MODKEY, 						XK_F6, 	   tag, 			{.i = 1 << 5} },
-	{ MODKEY, 						XK_F7, 	   tag, 			{.i = 1 << 6} },
-	{ MODKEY, 						XK_F8, 	   tag, 			{.i = 1 << 7} },
-	{ MODKEY, 						XK_F9, 	   tag, 			{.i = 1 << 8} },
 };
 
 /* Button definitions */
