@@ -29,7 +29,7 @@ static const int 				vertpad            		= 10;       /* vertical padding of bar
 static const int 				sidepad            		= 10;       /* horizontal padding of bar */
 
 /* Fonts */
-static const char 				*fonts[]          		= { "JetBrainsMonoNL NFP:style=Bold:size=13", "Noto Sans Arabic:size=13:style=Bold","Noto Color Emoji:size=13" };
+static const char 				*fonts[]          		= { "JetBrainsMonoNL NFP:style=Bold:size=13", "Noto Sans Arabic:size=13:style=Bold","Noto Emoji:size=13", "Noto Color Emoji:size=13" };
 static const char 				dmenufont[]       		= "JetBrainsMonoNL NFP:style=Bold:size=13";
 
 /* Default colors */
@@ -146,13 +146,13 @@ static const int 				resizehints 			= 0;    /* 1 means respect size hints in til
 static const int 				lockfullscreen 			= 1; /* 1 will force focus on the fullscreen window */
 
 /* Layouts */
-static const Layout 			layouts[] 					= {
-	/* symbol     		    	arrange function */
-	{ "󰯴",      				 dwindle },   /* first entry is default */
-	{ "󰰤",      				 tile },    
-	{ "󰰏",      				 monocle },
-	{ "󰰰",      				 NULL },    /* no layout function means floating behavior */
-	{ "󰰡",      				 spiral },
+static const Layout 			layouts[] 				= {
+	/* symbol					arrange function */
+	{ "󰯴",						dwindle },   /* first entry is default */
+	{ "󰰤",						tile },    
+	{ "󰰏",						monocle },
+	{ "󰰰",						NULL },    /* no layout function means floating behavior */
+	{ "󰰡",						spiral },
 };
 
 /* Commands */
@@ -224,8 +224,8 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_u,      spawn,          	SHCMD("code --password-store=kwallet6") },
 	{ 0,			XF86XK_AudioLowerVolume,   spawn,			SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
 	{ 0,			XF86XK_AudioRaiseVolume,   spawn, 			SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
-	{ 0,			XF86XK_MonBrightnessUp,    spawn,			SHCMD("~/.config/openbox/scripts/brightness.sh 0.1") },
-	{ 0,			XF86XK_MonBrightnessDown,  spawn,			SHCMD("~/.config/openbox/scripts/brightness.sh -0.1") },
+	{ 0,			XF86XK_MonBrightnessUp,    spawn,			SHCMD("~/.config/dwm/brightness.sh 0.1") },
+	{ 0,			XF86XK_MonBrightnessDown,  spawn,			SHCMD("~/.config/dwm/brightness.sh -0.1") },
 	{ 0,			XF86XK_AudioMute,          spawn,			SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle") },
 	{ 0,			XF86XK_AudioMicMute,       spawn,			SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle") },
 };
