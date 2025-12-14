@@ -40,10 +40,10 @@ static const char 				col_gray4[]       		= "#eeeeee";
 static const char 				col_cyan[]        		= "#005577";
 
 /* Bar icon config */ 
-static const int   				myshowicon 					= 0;    // Show icon menu if 1
-static const int   				myiconw    					= 0;   // 0 = auto width using TEXTW() 
-static const char 				*myicon     				= "󰵆";
-static const char 				*myiconcmd  				= "/home/marwa/.config/rofi/launchers/type-1/menu.sh";
+static const int   				myshowicon 				= 0;    // Show icon menu if 1
+static const int   				myiconw    				= 0;   // 0 = auto width using TEXTW() 
+static const char 				*myicon     			= "󰵆";
+static const char 				*myiconcmd  			= "/home/marwa/.config/rofi/launchers/type-1/menu.sh";
 
 /* Core Breeze Dark palette */
 static const char 				col_breeze0[]  			= "#232629";  // Background
@@ -63,20 +63,55 @@ static const char 				col_breeze11[] 			= "#27AE60";  // Green (success)
 static const char 				col_breeze12[] 			= "#9B59B6";  // Purple (special case)
 static const char 				col_breeze13[] 			= "#FFB86C";  // orange (title)
 
+/* Core Dracula palette */
+static const char               col_dracula0[]  		= "#282A36";  // Background
+static const char               col_dracula1[]  		= "#44475A";  // Selection / alternate background
+static const char               col_dracula2[]  		= "#6272A4";  // Current line / border / accent
+static const char               col_dracula3[]  		= "#6272A4";  // Comment / disabled text
+
+static const char               col_dracula4[]  		= "#F8F8F2";  // Main foreground
+static const char               col_dracula5[]  		= "#FFFFFF";  // Bright foreground (selected)
+static const char               col_dracula6[]  		= "#8BE9FD";  // Cyan
+static const char               col_dracula7[]  		= "#BD93F9";  // Purple (primary accent)
+
+static const char               col_dracula8[]  		= "#FF5555";  // Red (error / urgent)
+static const char               col_dracula9[]  		= "#FFB86C";  // Orange (warning / title)
+static const char               col_dracula10[] 		= "#F1FA8C";  // Yellow (attention)
+static const char               col_dracula11[] 		= "#50FA7B";  // Green (success)
+static const char               col_dracula12[] 		= "#FF79C6";  // Pink (special)
+static const char               col_dracula13[] 		= "#FFB86C";  // Title / highlight orange
+
+
+/* Active colors */
+//static const char 				*colors[][3] 			= {
+//    /*							fg            		bg            	border   */
+//    [SchemeNorm]     			= { col_breeze4, 	col_breeze0, 	col_breeze2 }, // unfocused window
+//	[SchemeTitle]     			= { col_breeze13, 	col_breeze0, 	col_breeze2 }, // Window title
+//    [SchemeSel]      			= { col_breeze5, 	col_breeze7, 	col_breeze7 }, // focused window
+//    [SchemeTag]      			= { col_breeze7, 	col_breeze0, 	col_breeze2 }, // normal tag
+//    [SchemeTagSel]   			= { col_breeze4, 	col_breeze7, 	col_breeze5 }, // selected tag
+//    [SchemeTagUrg]   			= { col_breeze5, 	col_breeze8, 	col_breeze8 }, // urgent tag
+//    [SchemeTagEmpty]	 		= { col_breeze3, 	col_breeze0, 	col_breeze2 }, // empty/disabled tag
+//	[SchemeTagUnderline]    	= { col_breeze7, 	col_breeze0, 	col_breeze7 }, // blue underline
+//    [SchemeTagUrgUnderline] 	= { col_breeze8, 	col_breeze0, 	col_breeze8 }, // red underline
+//	[SchemeTagUnderlineSel] 	= { col_breeze5, 	col_breeze0, 	col_breeze5 }, // white underline (selected)
+//};
+
 /* Active colors */
 static const char 				*colors[][3] 			= {
-    /*							fg            		bg            	border   */
-    [SchemeNorm]     			= { col_breeze4, 	col_breeze0, 	col_breeze2 }, // unfocused window
-	[SchemeTitle]     			= { col_breeze13, 	col_breeze0, 	col_breeze2 }, // Window title
-    [SchemeSel]      			= { col_breeze5, 	col_breeze7, 	col_breeze7 }, // focused window
-    [SchemeTag]      			= { col_breeze7, 	col_breeze0, 	col_breeze2 }, // normal tag
-    [SchemeTagSel]   			= { col_breeze4, 	col_breeze7, 	col_breeze5 }, // selected tag
-    [SchemeTagUrg]   			= { col_breeze5, 	col_breeze8, 	col_breeze8 }, // urgent tag
-    [SchemeTagEmpty]	 		= { col_breeze3, 	col_breeze0, 	col_breeze2 }, // empty/disabled tag
-	[SchemeTagUnderline]    	= { col_breeze7, 	col_breeze0, 	col_breeze7 }, // blue underline
-    [SchemeTagUrgUnderline] 	= { col_breeze8, 	col_breeze0, 	col_breeze8 }, // red underline
-	[SchemeTagUnderlineSel] 	= { col_breeze5, 	col_breeze0, 	col_breeze5 }, // white underline (selected)
+    /*                          fg                 bg             border */
+    [SchemeNorm]                = { col_dracula4,  col_dracula0,  col_dracula2 }, // unfocused window
+    [SchemeTitle]               = { col_dracula12, col_dracula0,  col_dracula2 }, // window title
+    [SchemeSel]                 = { col_dracula5,  col_dracula7,  col_dracula12}, // focused window
+    [SchemeTag]                 = { col_dracula7,  col_dracula0,  col_dracula2 }, // normal tag
+    [SchemeTagSel]              = { col_dracula4,  col_dracula7,  col_dracula5 }, // selected tag
+    [SchemeTagUrg]              = { col_dracula5,  col_dracula8,  col_dracula8 }, // urgent tag
+    [SchemeTagEmpty]            = { col_dracula3,  col_dracula0,  col_dracula2 }, // empty/disabled tag
+    [SchemeTagUnderline]        = { col_dracula6,  col_dracula0,  col_dracula6 }, // cyan underline
+    [SchemeTagUrgUnderline]     = { col_dracula8,  col_dracula0,  col_dracula8 }, // red underline
+    [SchemeTagUnderlineSel]     = { col_dracula5,  col_dracula0,  col_dracula5 }, // white underline
 };
+
 
 /* Autostart */
 static const char *const 		autostart[] 			= {
@@ -98,45 +133,56 @@ static const char *const 		autostart[] 			= {
 };
 
 /* Tagging */
-static const char 				*tags[] 				= { "󰾔", "󰐤", "󰉌", "󰇟", "󰏬","󰎄", "󰍦", "󱃖", "" };
-static const char 				*tags2[] 				= { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱","󰎳", "󰎶", "󰎹", "󰎼" };
+static const char 				*tags[] 				= { "󰾔", "󰐤", "󰉌", "󰇟", "󰏬","󰎄", "󰍦", "󱃖", "", "󰴃" };
+static const char 				*tags2[] 				= { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱","󰎳", "󰎶", "󰎹", "󰎼", "󰽽" };
+static const int 				mytags					= 10;
 
 /* Underline tag*/
 static const unsigned int 		ulinestroke				= 2;	/* thickness / height of the underline */
 static const unsigned int 		ulinevoffset			= 0;	/* how far above the bottom of the bar the line should appear */
 
 /* Window rules*/
+/* Window rules */
 static const Rule 				rules[] 				= {
-	/* xprop(1):
-	 *	WM_CLASS(STRING) = instance, class
-	 *	WM_NAME(STRING) = title
-	 */
-	/* class      								instance    title       tags mask     isfloating   monitor */
+	/* class                                  	instance   title   tags mask   isfloating   monitor */
 
-	{ "firefox",     							NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "zen",     								NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "Vivaldi-stable",     					NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "Google-chrome",     						NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "Opera",     								NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "Brave-browser",     						NULL,       NULL,       1 << 0,       0,           -1 },
-	{ "Xfce4-terminal",  						NULL,       NULL,       1 << 1,       0,           -1 },
-	{ "st",               						NULL,       NULL,       1 << 1,       0,           -1 },
-	{ "XTerm",  								NULL,       NULL,       1 << 1,       0,           -1 },
-	{ "Pcmanfm",  								NULL,       NULL,       1 << 2,       0,           -1 },
-	{ "Thunar",  								NULL,       NULL,       1 << 2,       0,           -1 },
-	{ "Code",  									NULL,       NULL,       1 << 7,       0,           -1 },
-	{ "kdevelop",  								NULL,       NULL,       1 << 7,       0,           -1 },
-	{ "Gimp-3.0",  							    NULL,       NULL,       1 << 3,       0,           -1 },
-	{ "Gimp",  							    	NULL,       NULL,       1 << 3,       0,           -1 },
-	{ "Spotify",  								NULL,       NULL,       1 << 5,       0,           -1 },
-	{ "FreeTube",  								NULL,       NULL,       1 << 8,       0,           -1 },
-	{ "io.github.celluloid_player.Celluloid",  	NULL,       NULL,       1 << 8,       0,           -1 },
-	{ "mpv",  					    			NULL,       NULL,       1 << 8,       0,           -1 },
-	{ "Xed",  									NULL,       NULL,       1 << 7,       0,           -1 },
-	{ "Pluma",  								NULL,       NULL,       1 << 7,       0,           -1 },
-	{ "obsidian",  								NULL,       NULL,       1 << 4,       0,           -1 },
-	{ "TelegramDesktop",    					NULL,       NULL,       1 << 6,       0,           -1 },
-	{ "Slack",    								NULL,       NULL,       1 << 6,       0,           -1 },
+	/* tag 0 */
+	{ "firefox",                              	NULL, 		NULL, 	1 << 0, 	0, 			-1 },
+	{ "zen",                                  	NULL,  		NULL, 	1 << 0,  	0, 			-1 },
+	{ "Google-chrome",                        	NULL,  		NULL, 	1 << 0,  	0,  		-1 },
+	{ "Vivaldi-stable",                       	NULL,  		NULL,  	1 << 0,  	0, 			-1 },
+
+	/* tag 1 */
+	{ "Xfce4-terminal",                       	NULL,  		NULL,  	1 << 1, 	0, 			-1 },
+	{ "XTerm",                                	NULL,  		NULL,  	1 << 1,  	0, 			-1 },
+
+	/* tag 2 */
+	{ "Thunar",                               	NULL,  		NULL,  	1 << 2, 	0, 			-1 },
+
+	/* tag 3 */
+	{ "Gimp",                                 	NULL,  		NULL,  	1 << 3, 	0, 			-1 },
+
+	/* tag 4 */
+	{ "obsidian",                             	NULL,  		NULL,  	1 << 4, 	0, 			-1 },
+
+	/* tag 5 */
+	{ "Spotify",                              	NULL,  		NULL,  	1 << 5, 	0, 			-1 },
+
+	/* tag 6 */
+	{ "TelegramDesktop",                      	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
+
+	/* tag 7 */
+	{ "Code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+	{ "Xed",                                  	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+
+	/* tag 8 */
+	{ "FreeTube",                             	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
+	{ "io.github.celluloid_player.Celluloid", 	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
+	{ "mpv",                                  	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
+
+	/* tag 9 */
+	{ "Org.gnome.Evolution",                  	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
+	{ "gnome-calendar",                       	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
 };
 
 /* Window scaling */
@@ -147,12 +193,12 @@ static const int 				lockfullscreen 			= 1; /* 1 will force focus on the fullscr
 
 /* Layouts */
 static const Layout 			layouts[] 				= {
-	/* symbol					arrange function */
-	{ "󰯴",						dwindle },   /* first entry is default */
-	{ "󰰤",						tile 	},    
-	{ "󰰏",						monocle },
-	{ "󰰰",						NULL 	},    /* no layout function means floating behavior */
-	{ "󰰡",						spiral  },
+    /* symbol   arrange function */
+    {	"󰯴",	dwindle		},   /* first entry is default */
+    {	"󰰤",	tile		},    
+    {	"󰰏",	monocle		},
+    {	"󰰰",	NULL		},   /* no layout function means floating behavior */
+    {	"󰰡",	spiral		},
 };
 
 /* Commands */
@@ -224,8 +270,8 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_u,      spawn,          	SHCMD("code --password-store=kwallet6") },
 	{ 0,			XF86XK_AudioLowerVolume,   spawn,			SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
 	{ 0,			XF86XK_AudioRaiseVolume,   spawn, 			SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
-	{ 0,			XF86XK_MonBrightnessUp,    spawn,			SHCMD("~/.config/dwm/brightness.sh 0.1") },
-	{ 0,			XF86XK_MonBrightnessDown,  spawn,			SHCMD("~/.config/dwm/brightness.sh -0.1") },
+	{ 0,			XF86XK_MonBrightnessUp,    spawn,			SHCMD("brightnessctl set +5%") },
+	{ 0,			XF86XK_MonBrightnessDown,  spawn,			SHCMD("brightnessctl set 5%-") },
 	{ 0,			XF86XK_AudioMute,          spawn,			SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle") },
 	{ 0,			XF86XK_AudioMicMute,       spawn,			SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle") },
 };
