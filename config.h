@@ -26,11 +26,17 @@ static const int 				showsystray        		= 1;        /* 0 means no systray */
 static const int 				showbar            		= 1;        /* 0 means no bar */
 static const int 				topbar             		= 1;        /* 0 means bottom bar */
 static const int 				vertpad            		= 10;       /* vertical padding of bar */
-static const int 				sidepad            		= 10;       /* horizontal padding of bar */
+static const int 				sidepad            		= 12;       /* horizontal padding of bar */
 
 /* Fonts */
 static const char 				*fonts[]          		= { "JetBrainsMonoNL NFP:style=Bold:size=13", "Noto Sans Arabic:size=13:style=Bold","Noto Color Emoji:size=13", "Noto Emoji:size=13" };
 static const char 				dmenufont[]       		= "JetBrainsMonoNL NFP:style=Bold:size=13";
+
+/* Bar icon config */ 
+static const int   				myshowicon 				= 0;    // Show icon menu if 1
+static const int   				myiconw    				= 0;   // 0 = auto width using TEXTW() 
+static const char 				*myicon     			= "󰵆";
+static const char 				*myiconcmd  			= "/home/marwa/.config/rofi/launchers/type-1/menu.sh";
 
 /* Default colors */
 static const char 				col_gray1[]       		= "#222222";
@@ -38,12 +44,6 @@ static const char 				col_gray2[]       		= "#444444";
 static const char 				col_gray3[]       		= "#bbbbbb";
 static const char 				col_gray4[]       		= "#eeeeee";
 static const char 				col_cyan[]        		= "#005577";
-
-/* Bar icon config */ 
-static const int   				myshowicon 				= 0;    // Show icon menu if 1
-static const int   				myiconw    				= 0;   // 0 = auto width using TEXTW() 
-static const char 				*myicon     			= "󰵆";
-static const char 				*myiconcmd  			= "/home/marwa/.config/rofi/launchers/type-1/menu.sh";
 
 /* Core Breeze Dark palette */
 static const char 				col_breeze0[]  			= "#232629";  // Background
@@ -64,6 +64,7 @@ static const char 				col_breeze12[] 			= "#9B59B6";  // Purple (special case)
 static const char 				col_breeze13[] 			= "#FFB86C";  // orange (title)
 
 /* Core Dracula palette */
+
 static const char               col_dracula0[]  		= "#282A36";  // Background
 static const char               col_dracula1[]  		= "#44475A";  // Selection / alternate background
 static const char               col_dracula2[]  		= "#6272A4";  // Current line / border / accent
@@ -80,22 +81,6 @@ static const char               col_dracula10[] 		= "#F1FA8C";  // Yellow (atten
 static const char               col_dracula11[] 		= "#50FA7B";  // Green (success)
 static const char               col_dracula12[] 		= "#FF79C6";  // Pink (special)
 static const char               col_dracula13[] 		= "#FFB86C";  // Title / highlight orange
-
-
-/* Active colors */
-//static const char 				*colors[][3] 			= {
-//    /*							fg            		bg            	border   */
-//    [SchemeNorm]     			= { col_breeze4, 	col_breeze0, 	col_breeze2 }, // unfocused window
-//	[SchemeTitle]     			= { col_breeze13, 	col_breeze0, 	col_breeze2 }, // Window title
-//    [SchemeSel]      			= { col_breeze5, 	col_breeze7, 	col_breeze7 }, // focused window
-//    [SchemeTag]      			= { col_breeze7, 	col_breeze0, 	col_breeze2 }, // normal tag
-//    [SchemeTagSel]   			= { col_breeze4, 	col_breeze7, 	col_breeze5 }, // selected tag
-//    [SchemeTagUrg]   			= { col_breeze5, 	col_breeze8, 	col_breeze8 }, // urgent tag
-//    [SchemeTagEmpty]	 		= { col_breeze3, 	col_breeze0, 	col_breeze2 }, // empty/disabled tag
-//	[SchemeTagUnderline]    	= { col_breeze7, 	col_breeze0, 	col_breeze7 }, // blue underline
-//    [SchemeTagUrgUnderline] 	= { col_breeze8, 	col_breeze0, 	col_breeze8 }, // red underline
-//	[SchemeTagUnderlineSel] 	= { col_breeze5, 	col_breeze0, 	col_breeze5 }, // white underline (selected)
-//};
 
 /* Active colors */
 static const char 				*colors[][3] 			= {
@@ -114,6 +99,7 @@ static const char 				*colors[][3] 			= {
 
 
 /* Autostart */
+//for some reason, i should put the full path of the script, maybe because dwm doesnt select ~ (home folder)
 static const char *const 		autostart[] 			= {
     "nitrogen", "--restore", NULL,
     "picom", "--config", "/home/marwa/.config/picom/dwm.conf", NULL,
@@ -142,9 +128,10 @@ static const unsigned int 		ulinestroke				= 2;	/* thickness / height of the und
 static const unsigned int 		ulinevoffset			= 0;	/* how far above the bottom of the bar the line should appear */
 
 /* Window rules*/
-/* Window rules */
 static const Rule 				rules[] 				= {
 	/* class                                  	instance   title   tags mask   isfloating   monitor */
+
+	{ "MEGAsync",                              	NULL, 		NULL, 	-1, 		1, 			-1 },
 
 	/* tag 0 */
 	{ "firefox",                              	NULL, 		NULL, 	1 << 0, 	0, 			-1 },
@@ -155,6 +142,7 @@ static const Rule 				rules[] 				= {
 	/* tag 1 */
 	{ "Xfce4-terminal",                       	NULL,  		NULL,  	1 << 1, 	0, 			-1 },
 	{ "XTerm",                                	NULL,  		NULL,  	1 << 1,  	0, 			-1 },
+	{ "st-256color",                            NULL,  		NULL,  	1 << 1,  	0, 			-1 },
 
 	/* tag 2 */
 	{ "Thunar",                               	NULL,  		NULL,  	1 << 2, 	0, 			-1 },
@@ -164,6 +152,7 @@ static const Rule 				rules[] 				= {
 
 	/* tag 4 */
 	{ "obsidian",                             	NULL,  		NULL,  	1 << 4, 	0, 			-1 },
+	{ "WebApp-Minotes2102",                     NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 
 	/* tag 5 */
 	{ "Spotify",                              	NULL,  		NULL,  	1 << 5, 	0, 			-1 },
@@ -205,6 +194,7 @@ static const Layout 			layouts[] 				= {
 static char 					dmenumon[2] 			= "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char 				*dmenucmd[] 			= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char 				*termcmd[]  			= { "xfce4-terminal", NULL };
+static const char 				*termcmd2[]  			= { "xterm", NULL };
 
 /* Focus window on hover*/
 static const int 				focusonwheel       		= 0; //O means false
@@ -213,6 +203,7 @@ static const int 				focusonwheel       		= 0; //O means false
 static const Key 				keys[] 					= {
 	/* modifier                     key        function        	argument */
 	{ MODKEY,             			XK_Return, spawn,          	{.v = termcmd } },
+	{ MODKEY|ShiftMask,             XK_Return, spawn,          	{.v = termcmd2 } },
 	{ MODKEY, 			            XK_r,      togglebar,      	{0} },
 	{ MODKEY,                       XK_j,      focusstack,     	{.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     	{.i = -1 } },
@@ -224,7 +215,6 @@ static const Key 				keys[] 					= {
     { MODKEY|ShiftMask,             XK_Left,   shifttag,        { .i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       	{.f = -0.05} },
 	{ MODKEY,                       XK_s,      setmfact,       	{.f = +0.05} },
-	{ MODKEY|ShiftMask,             XK_Return, zoom,           	{0} },
 	{ MODKEY,                       XK_Tab,    view,           	{0} },
 	{ MODKEY|ShiftMask,             XK_j,      aspectresize,   	{.i = +24} },
 	{ MODKEY|ShiftMask,             XK_k,      aspectresize,   	{.i = -24} },
@@ -244,6 +234,7 @@ static const Key 				keys[] 					= {
     { 0,                            XK_F7,     view,          	{.i = 1 << 6} },
     { 0,                            XK_F8,     view,          	{.i = 1 << 7} },
     { 0,                            XK_F9,     view,          	{.i = 1 << 8} },
+	{ 0,                            XK_F10,    view,          	{.i = 1 << 9} },
     { ShiftMask,             		XK_F1,      tag,        	{.ui = 1 << 0} },
     { ShiftMask,             		XK_F2,      tag,        	{.ui = 1 << 1} },
     { ShiftMask,             		XK_F3,      tag,        	{.ui = 1 << 2} },
@@ -253,6 +244,7 @@ static const Key 				keys[] 					= {
     { ShiftMask,           			XK_F7,      tag,        	{.ui = 1 << 6} },
     { ShiftMask,           			XK_F8,      tag,        	{.ui = 1 << 7} },
     { ShiftMask,           			XK_F9,      tag,        	{.ui = 1 << 8} },
+	{ ShiftMask,           			XK_F10,     tag,        	{.ui = 1 << 9} },
     { MODKEY|ShiftMask,             XK_r,      spawn,          	SHCMD("~/.config/dwm/gamma.sh") },
 	{ MODKEY,             			XK_l,      spawn,          	SHCMD("~/.config/rofi/powermenu/type-2/powermenu.sh") },
 	{ MODKEY,             			XK_q,      spawn,          	SHCMD("~/.config/rofi/launchers/type-1/launcher.sh") },
@@ -277,6 +269,7 @@ static const Key 				keys[] 					= {
 };
 
 /* Button definitions */
+
 // click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin
 static const Button 			buttons[] 				= {
 	/* click                event mask      button          function        argument */

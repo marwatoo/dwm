@@ -71,99 +71,166 @@
 #define XEMBED_EMBEDDED_VERSION (VERSION_MAJOR << 16) | VERSION_MINOR
 
 /* enums */
-enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeTitle, SchemeSel, SchemeTag, SchemeTagSel, SchemeTagUrg, SchemeTagEmpty, SchemeTagUnderline, SchemeTagUrgUnderline, SchemeTagUnderlineSel }; /* color schemes */
-enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
-       NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
-       NetWMFullscreen, NetActiveWindow, NetWMWindowType,
-       NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
-enum { Manager, Xembed, XembedInfo, XLast }; /* Xembed atoms */
-enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
-enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
-       ClkClientWin, ClkRootWin, ClkLast }; /* clicks */
+enum
+	{ 
+		CurNormal,
+		CurResize,
+		CurMove,
+		CurLast 
+	}; /* cursor */
 
-typedef union {
-	int i;
-	unsigned int ui;
-	float f;
-	const void *v;
-} Arg;
+enum
+	{ 
+		SchemeNorm,
+		SchemeTitle,
+		SchemeSel,
+		SchemeTag,
+		SchemeTagSel,
+		SchemeTagUrg,
+		SchemeTagEmpty,
+		SchemeTagUnderline,
+		SchemeTagUrgUnderline,
+		SchemeTagUnderlineSel 
+	}; /* color schemes */
 
-typedef struct {
-	unsigned int click;
-	unsigned int mask;
-	unsigned int button;
-	void (*func)(const Arg *arg);
-	const Arg arg;
-} Button;
+enum
+	{
+		NetSupported,
+		NetWMName,
+		NetWMState,
+		NetWMCheck,
+		NetSystemTray,
+		NetSystemTrayOP,
+		NetSystemTrayOrientation,
+		NetSystemTrayOrientationHorz,
+		NetWMFullscreen,
+		NetActiveWindow,
+		NetWMWindowType,
+		NetWMWindowTypeDialog,
+		NetClientList,NetLast
+	}; /* EWMH atoms */
+
+enum
+	{
+		Manager,
+		Xembed,XembedInfo,
+		XLast
+	}; /* Xembed atoms */
+
+enum
+	{
+		WMProtocols,
+		WMDelete,
+		WMState,
+		WMTakeFocus,
+		WMLast
+	}; /* default atoms */
+
+enum
+	{ 
+		ClkTagBar,
+		ClkLtSymbol,
+		ClkStatusText,
+		ClkWinTitle,
+       	ClkClientWin,
+		ClkRootWin,
+		ClkLast 
+	}; /* clicks */
+
+typedef union
+	{
+		int i;
+		unsigned int ui;
+		float f;
+		const void *v;
+	} Arg;
+
+typedef struct
+	{
+		unsigned int click;
+		unsigned int mask;
+		unsigned int button;
+		void (*func)(const Arg *arg);
+		const Arg arg;
+	} Button;
 
 typedef struct Monitor Monitor;
+
 typedef struct Client Client;
-struct Client {
-	char name[256];
-	float mina, maxa;
-	int x, y, w, h;
-	int oldx, oldy, oldw, oldh;
-	int basew, baseh, incw, inch, maxw, maxh, minw, minh, hintsvalid;
-	int bw, oldbw;
-	unsigned int tags;
-	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
-	Client *next;
-	Client *snext;
-	Monitor *mon;
-	Window win;
-};
 
-typedef struct {
-	unsigned int mod;
-	KeySym keysym;
-	void (*func)(const Arg *);
-	const Arg arg;
-} Key;
+struct Client
+	{
+		char name[256];
+		float mina, maxa;
+		int x, y, w, h;
+		int oldx, oldy, oldw, oldh;
+		int basew, baseh, incw, inch, maxw, maxh, minw, minh, hintsvalid;
+		int bw, oldbw;
+		unsigned int tags;
+		int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
+		Client *next;
+		Client *snext;
+		Monitor *mon;
+		Window win;
+	};
 
-typedef struct {
-	const char *symbol;
-	void (*arrange)(Monitor *);
-} Layout;
+typedef struct
+	{
+		unsigned int mod;
+		KeySym keysym;
+		void (*func)(const Arg *);
+		const Arg arg;
+	} Key;
 
-struct Monitor {
-	char ltsymbol[16];
-	float mfact;
-	int nmaster;
-	int num;
-	int by;               /* bar geometry */
-	int mx, my, mw, mh;   /* screen size */
-	int wx, wy, ww, wh;   /* window area  */
-	int gappx;            /* gaps between windows */
-	unsigned int seltags;
-	unsigned int sellt;
-	unsigned int tagset[2];
-	int showbar;
-	int topbar;
-	Client *clients;
-	Client *sel;
-	Client *stack;
-	Monitor *next;
-	Window barwin;
-	const Layout *lt[2];
-};
+typedef struct
+	{
+		const char *symbol;
+		void (*arrange)(Monitor *);
+	} Layout;
 
-typedef struct {
-	const char *class;
-	const char *instance;
-	const char *title;
-	unsigned int tags;
-	int isfloating;
-	int monitor;
-} Rule;
+struct Monitor
+	{
+		char ltsymbol[16];
+		float mfact;
+		int nmaster;
+		int num;
+		int by;               /* bar geometry */
+		int mx, my, mw, mh;   /* screen size */
+		int wx, wy, ww, wh;   /* window area  */
+		int gappx;            /* gaps between windows */
+		unsigned int seltags;
+		unsigned int sellt;
+		unsigned int tagset[2];
+		int showbar;
+		int topbar;
+		Client *clients;
+		Client *sel;
+		Client *stack;
+		Monitor *next;
+		Window barwin;
+		const Layout *lt[2];
+	};
+
+typedef struct
+	{
+		const char *class;
+		const char *instance;
+		const char *title;
+		unsigned int tags;
+		int isfloating;
+		int monitor;
+	} Rule;
 
 typedef struct Systray   Systray;
-struct Systray {
-	Window win;
-	Client *icons;
-};
+
+struct Systray
+	{
+		Window win;
+		Client *icons;
+	};
 
 /* function declarations */
+
 static void fibonacci(Monitor *mon, int s);
 static void dwindle(Monitor *mon);
 static void spiral(Monitor *mon);
@@ -274,6 +341,7 @@ static void zoom(const Arg *arg);
 static void autostart_exec(void);
 
 /* variables */
+
 static Systray *systray = NULL;
 static const char broken[] = "broken";
 static char stext[1024];
@@ -325,7 +393,7 @@ static size_t autostart_len;
 /* function implementations */
 
 // execute command from autostart array
-static void
+void
 autostart_exec() {
 	const char *const *p;
 	size_t i = 0;
@@ -396,7 +464,6 @@ rotatestack(const Arg *arg)
 	}
 	if (c){
 		arrange(selmon);
-		//unfocus(f, 1);
 		focus(f);
 		restack(selmon);
 	}
@@ -974,7 +1041,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 		isCode = 0;
 	text = p;
 
-	w += lrpad; /* 1px padding on both sides */
+	w += lrpad;
 	ret = m->ww - w;
 	x = m->ww - w - getsystraywidth();
 
@@ -1132,11 +1199,9 @@ drawbar(Monitor *m)
 	/* draw window title (centered inside available space) */
 	if ((w = m->ww - tw - stw - x) > bh) {
 		if (m->sel) {
-			/* width of title text */
-			int titlew = TEXTW(m->sel->name);
 
 			/* compute center of the free space (between tags and status) */
-			int mid = (w - titlew) / 2;
+			int mid = (w - TEXTW(m->sel->name)) / 2;
 
 			/* prevent clipping on the left */
 			if (mid < lrpad / 2)
@@ -2124,7 +2189,7 @@ setup(void)
 	wmatom[WMState] = XInternAtom(dpy, "WM_STATE", False);
 	wmatom[WMTakeFocus] = XInternAtom(dpy, "WM_TAKE_FOCUS", False);
 	netatom[NetActiveWindow] = XInternAtom(dpy, "_NET_ACTIVE_WINDOW", False);
-   netatom[NetSupported] = XInternAtom(dpy, "_NET_SUPPORTED", False);
+   	netatom[NetSupported] = XInternAtom(dpy, "_NET_SUPPORTED", False);
 	netatom[NetSystemTray] = XInternAtom(dpy, "_NET_SYSTEM_TRAY_S0", False);
 	netatom[NetSystemTrayOP] = XInternAtom(dpy, "_NET_SYSTEM_TRAY_OPCODE", False);
 	netatom[NetSystemTrayOrientation] = XInternAtom(dpy, "_NET_SYSTEM_TRAY_ORIENTATION", False);
@@ -2617,7 +2682,8 @@ updatesystrayicongeom(Client *i, int w, int h)
 			i->w = w;
 		else
 			i->w = (int) ((float)bh * ((float)w / (float)h));
-		applysizehints(i, &(i->x), &(i->y), &(i->w), &(i->h), False);
+		//applysizehints(i, &(i->x), &(i->y), &(i->w), &(i->h), False);
+		XMoveResizeWindow(dpy, i->win, i->x, i->y, i->w, i->h);
 		/* force icons into the systray dimensions if they don't want to */
 		if (i->h > bh) {
 			if (i->w == i->h)
