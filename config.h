@@ -29,7 +29,12 @@ static const int 				vertpad            		= 10;       /* vertical padding of bar
 static const int 				sidepad            		= 12;       /* horizontal padding of bar */
 
 /* Fonts */
-static const char 				*fonts[]          		= { "JetBrainsMonoNL NFP:style=Bold:size=13", "Noto Sans Arabic:size=13:style=Bold","Noto Color Emoji:size=13", "Noto Emoji:size=13" };
+static const char 				*fonts[]          		= { 
+															"JetBrainsMonoNL NFP:style=Bold:size=13",
+															"Noto Sans Arabic:size=13:style=Bold",
+															"Noto Color Emoji:size=13",
+															"Noto Emoji:size=13" };
+
 static const char 				dmenufont[]       		= "JetBrainsMonoNL NFP:style=Bold:size=13";
 
 /* Bar icon config */ 
@@ -45,7 +50,7 @@ static const char 				col_gray3[]       		= "#bbbbbb";
 static const char 				col_gray4[]       		= "#eeeeee";
 static const char 				col_cyan[]        		= "#005577";
 
-/* Core Breeze Dark palette */
+/* Breeze Dark palette */
 static const char 				col_breeze0[]  			= "#232629";  // Background
 static const char 				col_breeze1[]  			= "#2A2E32";  // Alternate background
 static const char 				col_breeze2[]  			= "#31363B";  // Unfocused border / dark accent
@@ -63,7 +68,7 @@ static const char 				col_breeze11[] 			= "#27AE60";  // Green (success)
 static const char 				col_breeze12[] 			= "#9B59B6";  // Purple (special case)
 static const char 				col_breeze13[] 			= "#FFB86C";  // orange (title)
 
-/* Core Dracula palette */
+/* Dracula palette */
 
 static const char               col_dracula0[]  		= "#282A36";  // Background
 static const char               col_dracula1[]  		= "#44475A";  // Selection / alternate background
@@ -82,23 +87,41 @@ static const char               col_dracula11[] 		= "#50FA7B";  // Green (succes
 static const char               col_dracula12[] 		= "#FF79C6";  // Pink (special)
 static const char               col_dracula13[] 		= "#FFB86C";  // Title / highlight orange
 
-/* Active colors */
+
+/* Vimix palette */
+static const char 				col_vimix0[]  			= "#F5F5F5";  // Background (Window/View)
+static const char 				col_vimix1[]  			= "#FFFFFF";  // Alternate background
+static const char 				col_vimix2[]  			= "#DADCE0";  // Unfocused border / divider
+static const char 				col_vimix3[]  			= "#999999";  // Disabled / inactive text
+
+static const char 				col_vimix4[]  			= "#333333";  // Main foreground
+static const char 				col_vimix5[]  			= "#000000";  // Strong foreground (titles)
+static const char 				col_vimix6[]  			= "#4285F4";  // Primary accent (KDE blue)
+static const char 				col_vimix7[]  			= "#5F9CFF";  // Hover / lighter blue
+
+static const char 				col_vimix8[]  			= "#BF0303";  // Red (error / urgent)
+static const char 				col_vimix9[]  			= "#B08000";  // Amber (warning)
+static const char 				col_vimix10[] 			= "#FFD700";  // Yellow (attention)
+static const char 				col_vimix11[] 			= "#006E28";  // Green (success)
+static const char 				col_vimix12[] 			= "#444444";  // Dark neutral (borders/text)
+
+/* Active colors mapping */
 static const char 				*colors[][3] 			= {
-    /*                          fg                 bg             border */
-    [SchemeNorm]                = { col_dracula4,  col_dracula0,  col_dracula2 }, // unfocused window
-    [SchemeTitle]               = { col_dracula12, col_dracula0,  col_dracula2 }, // window title
-    [SchemeSel]                 = { col_dracula5,  col_dracula7,  col_dracula12}, // focused window
-    [SchemeTag]                 = { col_dracula7,  col_dracula0,  col_dracula2 }, // normal tag
-    [SchemeTagSel]              = { col_dracula4,  col_dracula7,  col_dracula5 }, // selected tag
-    [SchemeTagUrg]              = { col_dracula5,  col_dracula8,  col_dracula8 }, // urgent tag
-    [SchemeTagEmpty]            = { col_dracula3,  col_dracula0,  col_dracula2 }, // empty/disabled tag
-    [SchemeTagUnderline]        = { col_dracula6,  col_dracula0,  col_dracula6 }, // cyan underline
-    [SchemeTagUrgUnderline]     = { col_dracula8,  col_dracula0,  col_dracula8 }, // red underline
-    [SchemeTagUnderlineSel]     = { col_dracula5,  col_dracula0,  col_dracula5 }, // white underline
+    /* 									fg          bg          border   */
+	[SchemeNorm]        		= { col_vimix7,  col_vimix0,  col_vimix2 },  // unfocused
+	[SchemeTitle]       		= { col_vimix6,  col_vimix0,  col_vimix2 },  // title text
+	[SchemeSel]         		= { col_vimix6,  col_vimix3,  col_vimix6 },  // focused
+	[SchemeTag]         		= { col_vimix7,  col_vimix0,  col_vimix2 },  // normal tag
+	[SchemeTagSel]      		= { col_vimix1,  col_vimix6,  col_vimix6 },  // selected tag
+	[SchemeTagUrg]      		= { col_vimix7,  col_vimix8,  col_vimix8 },  // urgent
+	[SchemeTagEmpty]    		= { col_vimix3,  col_vimix0,  col_vimix2 },  // empty tag
+	[SchemeTagUnderline]    	= { col_vimix6,  col_vimix0,  col_vimix6 },  // tag underline
+	[SchemeTagUrgUnderline] 	= { col_vimix8,  col_vimix0,  col_vimix8 },  // tag underline urgent
+	[SchemeTagUnderlineSel] 	= { col_vimix6,  col_vimix0,  col_vimix5 }, // tag underline selected
 };
 
-
 /* Autostart */
+
 //for some reason, i should put the full path of the script, maybe because dwm doesnt select ~ (home folder)
 static const char *const 		autostart[] 			= {
     "nitrogen", "--restore", NULL,
@@ -192,7 +215,19 @@ static const Layout 			layouts[] 				= {
 
 /* Commands */
 static char 					dmenumon[2] 			= "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char 				*dmenucmd[] 			= { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
+															dmenumon,
+															"-fn",
+															dmenufont,
+															"-nb",
+															col_gray1,
+															"-nf",
+															col_gray3,
+															"-sb",
+															col_cyan,
+															"-sf",
+															col_gray4,
+															NULL };
 static const char 				*termcmd[]  			= { "xfce4-terminal", NULL };
 static const char 				*termcmd2[]  			= { "xterm", NULL };
 
