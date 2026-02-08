@@ -14,6 +14,7 @@
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 //TYPE							NAME					VALUE {CONTENT}
+
 /* appearance */
 static const unsigned int 		borderpx  				= 4;        /* border pixel of windows */
 static const unsigned int 		gappx     				= 12;       /* gaps between windows */
@@ -150,58 +151,14 @@ static const int 				mytags					= 10;
 static const unsigned int 		ulinestroke				= 2;	/* thickness / height of the underline */
 static const unsigned int 		ulinevoffset			= 0;	/* how far above the bottom of the bar the line should appear */
 
-/* Window rules*/
-static const Rule 				rules[] 				= {
-	/* class                                  	instance   title   tags mask   isfloating   monitor */
-
-	{ "MEGAsync",                              	NULL, 		NULL, 	-1, 		1, 			-1 },
-
-	/* tag 0 */
-	{ "firefox",                              	NULL, 		NULL, 	1 << 0, 	0, 			-1 },
-	{ "zen",                                  	NULL,  		NULL, 	1 << 0,  	0, 			-1 },
-	{ "Google-chrome",                        	NULL,  		NULL, 	1 << 0,  	0,  		-1 },
-	{ "Vivaldi-stable",                       	NULL,  		NULL,  	1 << 0,  	0, 			-1 },
-
-	/* tag 1 */
-	{ "Xfce4-terminal",                       	NULL,  		NULL,  	1 << 1, 	0, 			-1 },
-	{ "XTerm",                                	NULL,  		NULL,  	1 << 1,  	0, 			-1 },
-	{ "st-256color",                            NULL,  		NULL,  	1 << 1,  	0, 			-1 },
-
-	/* tag 2 */
-	{ "Thunar",                               	NULL,  		NULL,  	1 << 2, 	0, 			-1 },
-
-	/* tag 3 */
-	{ "Gimp",                                 	NULL,  		NULL,  	1 << 3, 	0, 			-1 },
-
-	/* tag 4 */
-	{ "obsidian",                             	NULL,  		NULL,  	1 << 4, 	0, 			-1 },
-	{ "WebApp-Minotes2102",                     NULL,  		NULL,  	1 << 4, 	0, 			-1 },
-
-	/* tag 5 */
-	{ "Spotify",                              	NULL,  		NULL,  	1 << 5, 	0, 			-1 },
-
-	/* tag 6 */
-	{ "TelegramDesktop",                      	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
-
-	/* tag 7 */
-	{ "Code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
-	{ "Xed",                                  	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
-
-	/* tag 8 */
-	{ "FreeTube",                             	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
-	{ "io.github.celluloid_player.Celluloid", 	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
-	{ "mpv",                                  	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
-
-	/* tag 9 */
-	{ "Org.gnome.Evolution",                  	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
-	{ "gnome-calendar",                       	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
-};
-
 /* Window scaling */
 static const float 				mfact     				= 0.50; /* factor of master area size [0.05..0.95] */
 static const int 				nmaster     			= 1;    /* number of clients in master area */
 static const int 				resizehints 			= 0;    /* 1 means respect size hints in tiled resizals */
 static const int 				lockfullscreen 			= 1; /* 1 will force focus on the fullscreen window */
+
+/* Focus window */
+static const int 				focusonwheel       		= 0; //O means false (no focus on mouse hover)
 
 /* Layouts */
 static const Layout 			layouts[] 				= {
@@ -228,11 +185,63 @@ static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 															"-sf",
 															col_gray4,
 															NULL };
-static const char 				*termcmd[]  			= { "xfce4-terminal", NULL };
-static const char 				*termcmd2[]  			= { "xterm", NULL };
 
-/* Focus window on hover*/
-static const int 				focusonwheel       		= 0; //O means false
+static const char 				*termcmd[]  			= { "kitty", NULL };
+static const char 				*termcmd2[]  			= { "xfce4-terminal", NULL };
+
+
+/* Window rules*/
+static const Rule 				rules[] 				= {
+	/* class                                  	instance   title   tags mask   isfloating   monitor */
+
+	{ "MEGAsync",                              	NULL, 		NULL, 	-1, 		1, 			-1 },
+
+	/* tag 0 */
+	{ "firefox",                              	NULL, 		NULL, 	1 << 0, 	0, 			-1 },
+	{ "zen",                                  	NULL,  		NULL, 	1 << 0,  	0, 			-1 },
+	{ "Google-chrome",                        	NULL,  		NULL, 	1 << 0,  	0,  		-1 },
+	{ "Vivaldi-stable",                       	NULL,  		NULL,  	1 << 0,  	0, 			-1 },
+
+	/* tag 1 */
+	{ "Xfce4-terminal",                       	NULL,  		NULL,  	1 << 1, 	0, 			-1 },
+	{ "XTerm",                                	NULL,  		NULL,  	1 << 1,  	0, 			-1 },
+	{ "st-256color",                            NULL,  		NULL,  	1 << 1,  	0, 			-1 },
+	{ "com.mitchellh.ghostty",                  NULL,  		NULL,  	1 << 1,  	0, 			-1 },
+	{ "kitty",                                	NULL,  		NULL,  	1 << 1,  	0, 			-1 },
+
+	/* tag 2 */
+	{ "Thunar",                               	NULL,  		NULL,  	1 << 2, 	0, 			-1 },
+	{ "com.tui.spf",                            NULL,  		NULL,  	1 << 2, 	0, 			-1 },
+
+	/* tag 3 */
+	{ "Gimp",                                 	NULL,  		NULL,  	1 << 3, 	0, 			-1 },
+
+	/* tag 4 */
+	{ "obsidian",                             	NULL,  		NULL,  	1 << 4, 	0, 			-1 },
+	{ "WebApp-Minotes2102",                     NULL,  		NULL,  	1 << 4, 	0, 			-1 },
+
+	/* tag 5 */
+	{ "Spotify",                              	NULL,  		NULL,  	1 << 5, 	0, 			-1 },
+
+	/* tag 6 */
+	{ "TelegramDesktop",                      	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
+
+	/* tag 7 */
+	{ "Code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+	{ "Xed",                                  	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+	{ "com.tui.micro",                          NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+	{ "com.tui.nvim",                           NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+
+	/* tag 8 */
+	{ "FreeTube",                             	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
+	{ "io.github.celluloid_player.Celluloid", 	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
+	{ "mpv",                                  	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
+
+	/* tag 9 */
+	{ "Org.gnome.Evolution",                  	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
+	{ "gnome-calendar",                       	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
+	{ "com.tui.cal",                       		NULL,  		NULL,  	1 << 9, 	0, 			-1 },
+};
 
 /* Keys combinitions */
 static const Key 				keys[] 					= {
@@ -286,6 +295,7 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_w,      spawn,          	SHCMD("firefox") },
 	{ MODKEY|ShiftMask,       		XK_w,      spawn,          	SHCMD("~/.config/rofi/applets/bin/browser.sh") },
 	{ MODKEY,             			XK_e,      spawn,          	SHCMD("thunar ~") },
+	{ MODKEY|ShiftMask,             XK_e,      spawn,          	SHCMD("~/.config/dwm/files.sh") },
 	{ MODKEY,             			XK_y,      spawn,          	SHCMD("~/.config/dwm/switch.sh") },
 	{ MODKEY,             			XK_b,      spawn,          	SHCMD("obsidian") },
 	{ 0,             				XK_Print,  spawn,          	SHCMD("flameshot gui") },
@@ -294,7 +304,11 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_o,      spawn,          	SHCMD("~/.config/bspwm/blue.py") },
 	{ MODKEY,             			XK_v,      spawn,          	SHCMD("~/.config/bspwm/yt.sh") },
 	{ MODKEY,             			XK_x,      spawn,          	SHCMD("xed") },
+	{ MODKEY|ControlMask,           XK_x,      spawn,          	SHCMD("~/.config/dwm/nvim.sh") },
+	{ MODKEY|ShiftMask,             XK_x, 	   spawn,          	SHCMD("~/.config/dwm/edit.sh") },
 	{ MODKEY,             			XK_u,      spawn,          	SHCMD("code --password-store=kwallet6") },
+	{ MODKEY,             			XK_n,      spawn,          	SHCMD("~/.config/bspwm/ocr.sh") },
+	{ MODKEY|ShiftMask,             XK_u, 	   spawn,          	SHCMD("~/.config/dwm/cal.sh") },
 	{ 0,			XF86XK_AudioLowerVolume,   spawn,			SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
 	{ 0,			XF86XK_AudioRaiseVolume,   spawn, 			SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
 	{ 0,			XF86XK_MonBrightnessUp,    spawn,			SHCMD("brightnessctl set +5%") },
