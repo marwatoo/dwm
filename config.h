@@ -31,17 +31,18 @@ static const int 				sidepad            		= 12;       /* horizontal padding of b
 
 /* Fonts */
 static const char 				*fonts[]          		= { 
-															"JetBrainsMonoNL NFP:style=Bold:size=13",
-															"Noto Sans Arabic:size=13:style=Bold",
-															"Noto Color Emoji:size=13",
-															"Noto Emoji:size=13" };
+//															"UbuntuMono Nerd Font:size=14:style=Bold",		
+															"JetBrainsMonoNL NFP:style=Bold:size=14:antialias=true:hinting=true:hintstyle=hintfull",
+															"Noto Sans Arabic:size=14:style=Bold",
+//															"Ubuntu Arabic:size=14:style=Bold",
+															"Noto Emoji:size=14" };
 
 static const char 				dmenufont[]       		= "JetBrainsMonoNL NFP:style=Bold:size=13";
 
 /* Bar icon config */ 
 static const int   				myshowicon 				= 0;    // Show icon menu if 1
 static const int   				myiconw    				= 0;   // 0 = auto width using TEXTW() 
-static const char 				*myicon     			= "󰵆";
+static const char 				*myicon     			= ""; //󰵆
 static const char 				*myiconcmd  			= "/home/marwa/.config/rofi/launchers/type-1/menu.sh";
 
 /* Default colors */
@@ -90,21 +91,36 @@ static const char               col_dracula13[] 		= "#FFB86C";  // Title / highl
 
 
 /* Vimix palette */
-static const char 				col_vimix0[]  			= "#F5F5F5";  // Background (Window/View)
-static const char 				col_vimix1[]  			= "#FFFFFF";  // Alternate background
-static const char 				col_vimix2[]  			= "#DADCE0";  // Unfocused border / divider
-static const char 				col_vimix3[]  			= "#999999";  // Disabled / inactive text
+static const char 				lol_vimix0[]  			= "#F5F5F5";  // Background (Window/View)
+static const char 				lol_vimix1[]  			= "#FFFFFF";  // Alternate background
+static const char 				lol_vimix2[]  			= "#DADCE0";  // Unfocused border / divider
+static const char 				lol_vimix3[]  			= "#999999";  // Disabled / inactive text
 
-static const char 				col_vimix4[]  			= "#333333";  // Main foreground
-static const char 				col_vimix5[]  			= "#000000";  // Strong foreground (titles)
-static const char 				col_vimix6[]  			= "#4285F4";  // Primary accent (KDE blue)
-static const char 				col_vimix7[]  			= "#5F9CFF";  // Hover / lighter blue
+static const char 				lol_vimix4[]  			= "#333333";  // Main foreground
+static const char 				lol_vimix5[]  			= "#000000";  // Strong foreground (titles)
+static const char 				lol_vimix6[]  			= "#4285F4";  // Primary accent (KDE blue)
+static const char 				lol_vimix7[]  			= "#5F9CFF";  // Hover / lighter blue
 
-static const char 				col_vimix8[]  			= "#BF0303";  // Red (error / urgent)
-static const char 				col_vimix9[]  			= "#B08000";  // Amber (warning)
-static const char 				col_vimix10[] 			= "#FFD700";  // Yellow (attention)
-static const char 				col_vimix11[] 			= "#006E28";  // Green (success)
-static const char 				col_vimix12[] 			= "#444444";  // Dark neutral (borders/text)
+static const char 				lol_vimix8[]  			= "#BF0303";  // Red (error / urgent)
+static const char 				lol_vimix9[]  			= "#B08000";  // Amber (warning)
+static const char 				lol_vimix10[] 			= "#FFD700";  // Yellow (attention)
+static const char 				lol_vimix11[] 			= "#006E28";  // Green (success)
+static const char 				lol_vimix12[] 			= "#444444";  // Dark neutral (borders/text)
+
+/* Vimix Dark Doder palette */
+static const char               col_vimix0[]            = "#2C2E33";  // Background (Window/View)
+static const char               col_vimix1[]            = "#363840";  // Alternate background
+static const char               col_vimix2[]            = "#454850";  // Unfocused border / divider
+static const char               col_vimix3[]            = "#999999";  // Disabled / inactive text
+static const char               col_vimix4[]            = "#EAEAEA";  // Main foreground
+static const char               col_vimix5[]            = "#FFFFFF";  // Strong foreground (titles)
+static const char               col_vimix6[]            = "#4285F4";  // Primary accent (KDE blue)
+static const char               col_vimix7[]            = "#82A8F8";  // Hover / lighter blue
+static const char               col_vimix8[]            = "#BF0303";  // Red (error / urgent)
+static const char               col_vimix9[]            = "#B08000";  // Amber (warning)
+static const char               col_vimix10[]           = "#FFD700";  // Yellow (attention)
+static const char               col_vimix11[]           = "#006E28";  // Green (success)
+static const char               col_vimix12[]           = "#54575F";  // Dark neutral (borders/text)
 
 /* Active colors mapping */
 static const char 				*colors[][3] 			= {
@@ -145,7 +161,7 @@ static const char *const 		autostart[] 			= {
 /* Tagging */
 static const char 				*tags[] 				= { "󰾔", "󰐤", "󰉌", "󰇟", "󰏬","󰎄", "󰍦", "󱃖", "", "󰴃" };
 static const char 				*tags2[] 				= { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱","󰎳", "󰎶", "󰎹", "󰎼", "󰽽" };
-static const int 				mytags					= 10;
+static const int 				mytags					= 9;
 
 /* Underline tag*/
 static const unsigned int 		ulinestroke				= 2;	/* thickness / height of the underline */
@@ -186,15 +202,15 @@ static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 															col_gray4,
 															NULL };
 
-static const char 				*termcmd[]  			= { "kitty", NULL };
-static const char 				*termcmd2[]  			= { "xfce4-terminal", NULL };
+static const char 				*termcmd2[]  			= { "kitty", NULL };
+static const char 				*termcmd[]  			= { "xfce4-terminal", NULL };
 
 
 /* Window rules*/
 static const Rule 				rules[] 				= {
 	/* class                                  	instance   title   tags mask   isfloating   monitor */
 
-	{ "MEGAsync",                              	NULL, 		NULL, 	-1, 		1, 			-1 },
+	{ "MEGAsync",                              	NULL, 		NULL, 	0, 			1, 			-1 },
 
 	/* tag 0 */
 	{ "firefox",                              	NULL, 		NULL, 	1 << 0, 	0, 			-1 },
@@ -219,12 +235,16 @@ static const Rule 				rules[] 				= {
 	/* tag 4 */
 	{ "obsidian",                             	NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "WebApp-Minotes2102",                     NULL,  		NULL,  	1 << 4, 	0, 			-1 },
+	{ "marknote",	                    NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 
 	/* tag 5 */
 	{ "Spotify",                              	NULL,  		NULL,  	1 << 5, 	0, 			-1 },
 
 	/* tag 6 */
 	{ "TelegramDesktop",                      	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
+	{ "WebApp-ChatGPT5627",                     NULL,  		NULL,  	1 << 6, 	0, 			-1 },
+	{ "WebApp-DeepSeek9423",                    NULL,  		NULL,  	1 << 6, 	0, 			-1 },
+	{ "WebApp-Claude7033",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 
 	/* tag 7 */
 	{ "Code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
@@ -241,6 +261,7 @@ static const Rule 				rules[] 				= {
 	{ "Org.gnome.Evolution",                  	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
 	{ "gnome-calendar",                       	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
 	{ "com.tui.cal",                       		NULL,  		NULL,  	1 << 9, 	0, 			-1 },
+	{ "WebApp-Tasks2144",                       NULL,  		NULL,  	1 << 9, 	0, 			-1 },
 };
 
 /* Keys combinitions */
