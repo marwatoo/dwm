@@ -161,7 +161,7 @@ static const char *const 		autostart[] 			= {
 /* Tagging */
 static const char 				*tags[] 				= { "󰾔", "󰐤", "󰉌", "󰇟", "󰏬","󰎄", "󰍦", "󱃖", "", "󰴃" };
 static const char 				*tags2[] 				= { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱","󰎳", "󰎶", "󰎹", "󰎼", "󰽽" };
-static const int 				mytags					= 9;
+static const int 				mytags					= 10;
 
 /* Underline tag*/
 static const unsigned int 		ulinestroke				= 2;	/* thickness / height of the underline */
@@ -202,8 +202,8 @@ static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 															col_gray4,
 															NULL };
 
-static const char 				*termcmd2[]  			= { "kitty", NULL };
-static const char 				*termcmd[]  			= { "xfce4-terminal", NULL };
+static const char 				*termcmd[]  			= { "ghostty", NULL };
+static const char 				*termcmd2[]  			= { "xfce4-terminal", NULL };
 
 
 /* Window rules*/
@@ -251,6 +251,7 @@ static const Rule 				rules[] 				= {
 	{ "Xed",                                  	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "com.tui.micro",                          NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "com.tui.nvim",                           NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+	{ "kate",		                            NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 
 	/* tag 8 */
 	{ "FreeTube",                             	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
@@ -327,6 +328,7 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_x,      spawn,          	SHCMD("xed") },
 	{ MODKEY|ControlMask,           XK_x,      spawn,          	SHCMD("~/.config/dwm/nvim.sh") },
 	{ MODKEY|ShiftMask,             XK_x, 	   spawn,          	SHCMD("~/.config/dwm/edit.sh") },
+	{ MODKEY|Mod1Mask,              XK_x, 	   spawn,          	SHCMD("kate") },
 	{ MODKEY,             			XK_u,      spawn,          	SHCMD("code --password-store=kwallet6") },
 	{ MODKEY,             			XK_n,      spawn,          	SHCMD("~/.config/bspwm/ocr.sh") },
 	{ MODKEY|ShiftMask,             XK_u, 	   spawn,          	SHCMD("~/.config/dwm/cal.sh") },
