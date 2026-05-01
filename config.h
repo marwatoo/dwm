@@ -217,6 +217,7 @@ static const Rule 				rules[] 				= {
 	{ "zen",                                  	NULL,  		NULL, 	1 << 0,  	0, 			-1 },
 	{ "Google-chrome",                        	NULL,  		NULL, 	1 << 0,  	0,  		-1 },
 	{ "Vivaldi-stable",                       	NULL,  		NULL,  	1 << 0,  	0, 			-1 },
+	{ "Brave-origin-nightly",                   NULL,  		NULL,  	1 << 0,  	0, 			-1 },
 
 	/* tag 1 */
 	{ "Xfce4-terminal",                       	NULL,  		NULL,  	1 << 1, 	0, 			-1 },
@@ -235,7 +236,7 @@ static const Rule 				rules[] 				= {
 	/* tag 4 */
 	{ "obsidian",                             	NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "WebApp-Minotes2102",                     NULL,  		NULL,  	1 << 4, 	0, 			-1 },
-	{ "marknote",	                    NULL,  		NULL,  	1 << 4, 	0, 			-1 },
+	{ "marknote",	                    		NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 
 	/* tag 5 */
 	{ "Spotify",                              	NULL,  		NULL,  	1 << 5, 	0, 			-1 },
@@ -314,7 +315,7 @@ static const Key 				keys[] 					= {
     { MODKEY|ShiftMask,             XK_r,      spawn,          	SHCMD("~/.config/dwm/gamma.sh") },
 	{ MODKEY,             			XK_l,      spawn,          	SHCMD("~/.config/rofi/powermenu/type-2/powermenu.sh") },
 	{ MODKEY,             			XK_q,      spawn,          	SHCMD("~/.config/rofi/launchers/type-1/launcher.sh") },
-	{ MODKEY,             			XK_w,      spawn,          	SHCMD("firefox") },
+	{ MODKEY,             			XK_w,      spawn,          	SHCMD("brave-origin") },
 	{ MODKEY|ShiftMask,       		XK_w,      spawn,          	SHCMD("~/.config/rofi/applets/bin/browser.sh") },
 	{ MODKEY,             			XK_e,      spawn,          	SHCMD("thunar ~") },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          	SHCMD("~/.config/dwm/files.sh") },
