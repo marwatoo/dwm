@@ -154,6 +154,7 @@ static const char *const 		autostart[] 			= {
     "slstatus", NULL,
     "xfce4-screensaver", NULL,
     "xfce4-power-manager", NULL,
+	"pnmixer", NULL,
     "/home/marwa/.config/dwm/rkde.sh", NULL,
     NULL
 };
