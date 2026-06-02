@@ -266,6 +266,7 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void enqueue(Client *c);
 static void enqueuestack(Client *c);
+static void prepend(Client *c);
 static void rotatestack(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
@@ -451,27 +452,36 @@ enqueuestack(Client *c)
 }
 
 void
+prepend(Client *c)
+{
+	c->next = c->mon->clients;
+	c->mon->clients = c;
+}
+
+void
 rotatestack(const Arg *arg)
 {
 	Client *c = NULL, *f;
-
+ 
 	if (!selmon->sel)
 		return;
 	f = selmon->sel;
 	if (arg->i > 0) {
+		/* Rotate forward: move last tiled client to front */
 		for (c = nexttiled(selmon->clients); c && nexttiled(c->next); c = nexttiled(c->next));
 		if (c){
 			detach(c);
-			attach(c);
+			prepend(c);      /* ADD TO FRONT, not back */
 			detachstack(c);
-			attachstack(c);
+			attachstack(c);  /* ADD TO TOP OF STACK */
 		}
 	} else {
+		/* Rotate backward: move first tiled client to back */
 		if ((c = nexttiled(selmon->clients))){
 			detach(c);
-			enqueue(c);
+			enqueue(c);      /* ADD TO BACK */
 			detachstack(c);
-			enqueuestack(c);
+			enqueuestack(c); /* ADD TO BOTTOM OF STACK */
 		}
 	}
 	if (c){
@@ -650,11 +660,11 @@ void
 attach(Client *c)
 {
 	Client **tc;
-
+ 
 	/* iterate to the end of the client list */
 	for (tc = &c->mon->clients; *tc; tc = &(*tc)->next)
 		; 
-
+ 
 	/* attach new client at the end */
 	*tc = c;
 	c->next = NULL;

@@ -259,6 +259,8 @@ static const Rule 				rules[] 				= {
 	{ "FreeTube",                             	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 	{ "io.github.celluloid_player.Celluloid", 	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 	{ "mpv",                                  	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
+	{ "vlc",                                  	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
+	{ "WebApp-MyTube5416",                      NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 
 	/* tag 9 */
 	{ "Org.gnome.Evolution",                  	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
@@ -273,26 +275,39 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_Return, spawn,          	{.v = termcmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          	{.v = termcmd2 } },
 	{ MODKEY, 			            XK_r,      togglebar,      	{0} },
-	{ MODKEY,                       XK_j,      focusstack,     	{.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     	{.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     	{.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     	{.i = -1 } },
+
 	{ MODKEY,                       XK_Left,   shiftview,      	{.i = -1 } },
 	{ MODKEY,                       XK_Right,  shiftview,      	{.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_Right,  shifttag,        { .i = +1 } },
     { MODKEY|ShiftMask,             XK_Left,   shifttag,        { .i = -1 } },
+
+	{ MODKEY,                       XK_j,      focusstack,     	{.i = +1 } },
+	{ MODKEY,                       XK_k,      focusstack,     	{.i = -1 } },
+
 	{ MODKEY,                       XK_h,      setmfact,       	{.f = -0.05} },
-	{ MODKEY,                       XK_s,      setmfact,       	{.f = +0.05} },
+	{ MODKEY,                       XK_g,      setmfact,       	{.f = +0.05} },
+
+	{ MODKEY,			            XK_s,      rotatestack,     {.i = -1 } },
+	{ MODKEY,             			XK_d,      rotatestack,     {.i = +1 } },
+
+	{ MODKEY|ControlMask, 			XK_j, 	   incnmaster,		{.i = +1 } },
+	{ MODKEY|ControlMask, 			XK_k,      incnmaster, 		{.i = -1 } },
+
+	{ MODKEY|ControlMask, 			XK_h, 	   aspectresize, 	{.i = -24 } },
+	{ MODKEY|ControlMask, 			XK_l,      aspectresize, 	{.i = +24 } },
+
 	{ MODKEY,                       XK_Tab,    view,           	{0} },
-	{ MODKEY|ShiftMask,             XK_j,      aspectresize,   	{.i = +24} },
-	{ MODKEY|ShiftMask,             XK_k,      aspectresize,   	{.i = -24} },
+
 	{ MODKEY|Mod1Mask,              XK_c,      killclient,     	{0} },
-	{ MODKEY|ShiftMask,             XK_h,      rotatestack,     {.i = -1 } },
-	{ MODKEY,                       XK_t,      setlayout,      	{.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      	{.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      	{.v = &layouts[2]} },
+
+	{ MODKEY|Mod1Mask,              XK_s,      setlayout,      	{.v = &layouts[0]} },
+	{ MODKEY|Mod1Mask,              XK_d,      setlayout,      	{.v = &layouts[1]} },
+	{ MODKEY|Mod1Mask,              XK_f,      setlayout,      	{.v = &layouts[2]} },
+	{ MODKEY|Mod1Mask,              XK_m,      setlayout,      	{.v = &layouts[3]} },
 	{ MODKEY,                       XK_space,  setlayout,      	{0} },
+
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, 	{0} },
+
 	{ 0,                            XK_F1,     view,          	{.i = 1 << 0} },
     { 0,                            XK_F2,     view,          	{.i = 1 << 1} },
     { 0,                            XK_F3,     view,          	{.i = 1 << 2} },
@@ -303,6 +318,9 @@ static const Key 				keys[] 					= {
     { 0,                            XK_F8,     view,          	{.i = 1 << 7} },
     { 0,                            XK_F9,     view,          	{.i = 1 << 8} },
 	{ 0,                            XK_F10,    view,          	{.i = 1 << 9} },
+
+	{ 0,             				XK_Print,  spawn,          	SHCMD("flameshot gui") },
+
     { ShiftMask,             		XK_F1,      tag,        	{.ui = 1 << 0} },
     { ShiftMask,             		XK_F2,      tag,        	{.ui = 1 << 1} },
     { ShiftMask,             		XK_F3,      tag,        	{.ui = 1 << 2} },
@@ -313,20 +331,21 @@ static const Key 				keys[] 					= {
     { ShiftMask,           			XK_F8,      tag,        	{.ui = 1 << 7} },
     { ShiftMask,           			XK_F9,      tag,        	{.ui = 1 << 8} },
 	{ ShiftMask,           			XK_F10,     tag,        	{.ui = 1 << 9} },
+
     { MODKEY|ShiftMask,             XK_r,      spawn,          	SHCMD("~/.config/dwm/gamma.sh") },
 	{ MODKEY,             			XK_l,      spawn,          	SHCMD("~/.config/rofi/powermenu/type-2/powermenu.sh") },
 	{ MODKEY,             			XK_q,      spawn,          	SHCMD("~/.config/rofi/launchers/type-1/launcher.sh") },
-	{ MODKEY,             			XK_w,      spawn,          	SHCMD("brave-origin") },
+	{ MODKEY,             			XK_w,      spawn,          	SHCMD("flatpak run app.zen_browser.zen") },
 	{ MODKEY|ShiftMask,       		XK_w,      spawn,          	SHCMD("~/.config/rofi/applets/bin/browser.sh") },
 	{ MODKEY,             			XK_e,      spawn,          	SHCMD("thunar ~") },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          	SHCMD("~/.config/dwm/files.sh") },
 	{ MODKEY,             			XK_y,      spawn,          	SHCMD("~/.config/dwm/switch.sh") },
 	{ MODKEY,             			XK_b,      spawn,          	SHCMD("obsidian") },
-	{ 0,             				XK_Print,  spawn,          	SHCMD("flameshot gui") },
 	{ MODKEY,             			XK_a,      spawn,          	SHCMD("~/.config/bspwm/pkde.py") },
 	{ MODKEY,             			XK_z,      spawn,          	SHCMD("~/.config/bspwm/pemoji/pemoji.py") },
 	{ MODKEY,             			XK_o,      spawn,          	SHCMD("~/.config/bspwm/blue.py") },
 	{ MODKEY,             			XK_v,      spawn,          	SHCMD("~/.config/bspwm/yt.sh") },
+	{ MODKEY|ShiftMask,             XK_v,      spawn,          	SHCMD("~/.config/bspwm/iptv.py") },
 	{ MODKEY,             			XK_x,      spawn,          	SHCMD("xed") },
 	{ MODKEY|ControlMask,           XK_x,      spawn,          	SHCMD("~/.config/dwm/nvim.sh") },
 	{ MODKEY|ShiftMask,             XK_x, 	   spawn,          	SHCMD("~/.config/dwm/edit.sh") },
@@ -334,6 +353,7 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_u,      spawn,          	SHCMD("code --password-store=kwallet6") },
 	{ MODKEY,             			XK_n,      spawn,          	SHCMD("~/.config/bspwm/ocr.sh") },
 	{ MODKEY|ShiftMask,             XK_u, 	   spawn,          	SHCMD("~/.config/dwm/cal.sh") },
+	
 	{ 0,			XF86XK_AudioLowerVolume,   spawn,			SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
 	{ 0,			XF86XK_AudioRaiseVolume,   spawn, 			SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
 	{ 0,			XF86XK_MonBrightnessUp,    spawn,			SHCMD("brightnessctl set +5%") },
