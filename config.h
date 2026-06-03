@@ -250,6 +250,7 @@ static const Rule 				rules[] 				= {
 
 	/* tag 7 */
 	{ "Code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+	{ "code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "Xed",                                  	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "com.tui.micro",                          NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "com.tui.nvim",                           NULL,  		NULL,  	1 << 7, 	0, 			-1 },
