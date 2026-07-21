@@ -686,16 +686,6 @@ buttonpress(XEvent *e)
 	Monitor *m;
 	XButtonPressedEvent *ev = &e->xbutton;
 
-	/* menu icon click */
-	if (myshowicon) {
-		int iw = TEXTW(myicon);
-		if (ev->x < iw) {
-			spawn(&(const Arg){ .v = (const char *[]){ myiconcmd, NULL }});
-			return;
-		}
-		ev->x -= iw;
-	}
-
 	click = ClkRootWin;
 
 	/* focus monitor if necessary */
@@ -1172,14 +1162,6 @@ drawbar(Monitor *m)
     }
 
     x = 0;
-
-    /* draw custom menu icon */
-    if (myshowicon) {
-        int iw = myiconw ? myiconw : TEXTW(myicon);
-        drw_setscheme(drw, scheme[SchemeNorm]);
-        drw_text(drw, x, 0, iw, bh, lrpad / 2, myicon, 0);
-        x += iw;
-    }
 
     /* draw tags */
     for (i = 0; i < LENGTH(tags); i++) {
@@ -2353,7 +2335,8 @@ tile(Monitor *m)
 void
 togglebar(const Arg *arg)
 {
-    selmon->showbar = selmon->pertag->showbars[selmon->pertag->curtag] = !selmon->showbar;
+    // selmon->showbar = selmon->pertag->showbars[selmon->pertag->curtag] = !selmon->showbar;
+	selmon->showbar = !selmon->showbar;
     updatebarpos(selmon);
     resizebarwin(selmon);
 
@@ -2443,8 +2426,8 @@ toggleview(const Arg *arg)
 		selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt];
 		selmon->lt[selmon->sellt^1] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt^1];
 
-		if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
-			togglebar(NULL);
+		/*if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
+			togglebar(NULL);*/
 
 		focus(NULL);
 		arrange(selmon);
@@ -2914,8 +2897,8 @@ view(const Arg *arg)
 	selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt];
 	selmon->lt[selmon->sellt^1] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt^1];
 
-	if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
-		togglebar(NULL);
+	/*if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
+		togglebar(NULL);*/
 
 	focus(NULL);
 	arrange(selmon);

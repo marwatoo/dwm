@@ -39,12 +39,6 @@ static const char 				*fonts[]          		= {
 
 static const char 				dmenufont[]       		= "JetBrainsMonoNL NFP:style=Bold:size=13";
 
-/* Bar icon config */ 
-static const int   				myshowicon 				= 0;    // Show icon menu if 1
-static const int   				myiconw    				= 0;   // 0 = auto width using TEXTW() 
-static const char 				*myicon     			= ""; //󰵆
-static const char 				*myiconcmd  			= "/home/marwa/.config/rofi/launchers/type-1/menu.sh";
-
 /* Default colors */
 static const char 				col_gray1[]       		= "#222222";
 static const char 				col_gray2[]       		= "#444444";
@@ -52,23 +46,6 @@ static const char 				col_gray3[]       		= "#bbbbbb";
 static const char 				col_gray4[]       		= "#eeeeee";
 static const char 				col_cyan[]        		= "#005577";
 
-/* Breeze Dark palette */
-static const char 				col_breeze0[]  			= "#232629";  // Background
-static const char 				col_breeze1[]  			= "#2A2E32";  // Alternate background
-static const char 				col_breeze2[]  			= "#31363B";  // Unfocused border / dark accent
-static const char 				col_breeze3[]  			= "#4D4D4D";  // Disabled text / dim gray
-
-static const char 				col_breeze4[]  			= "#EFF0F1";  // Main foreground (text)
-static const char 				col_breeze5[]  			= "#FCFCFC";  // Bright foreground (selected)
-static const char 				col_breeze6[]  			= "#00BCD4";  // Cyan accent
-static const char 				col_breeze7[]  			= "#3DAEE9";  // Blue highlight (KDE accent)
-
-static const char 				col_breeze8[]  			= "#DA4453";  // Red (error)
-static const char 				col_breeze9[]  			= "#F67400";  // Orange (warning)
-static const char 				col_breeze10[] 			= "#C1D72E";  // Yellow/green (attention)
-static const char 				col_breeze11[] 			= "#27AE60";  // Green (success)
-static const char 				col_breeze12[] 			= "#9B59B6";  // Purple (special case)
-static const char 				col_breeze13[] 			= "#FFB86C";  // orange (title)
 
 /* Dracula palette */
 
@@ -89,23 +66,6 @@ static const char               col_dracula11[] 		= "#50FA7B";  // Green (succes
 static const char               col_dracula12[] 		= "#FF79C6";  // Pink (special)
 static const char               col_dracula13[] 		= "#FFB86C";  // Title / highlight orange
 
-
-/* Vimix palette */
-static const char 				lol_vimix0[]  			= "#F5F5F5";  // Background (Window/View)
-static const char 				lol_vimix1[]  			= "#FFFFFF";  // Alternate background
-static const char 				lol_vimix2[]  			= "#DADCE0";  // Unfocused border / divider
-static const char 				lol_vimix3[]  			= "#999999";  // Disabled / inactive text
-
-static const char 				lol_vimix4[]  			= "#333333";  // Main foreground
-static const char 				lol_vimix5[]  			= "#000000";  // Strong foreground (titles)
-static const char 				lol_vimix6[]  			= "#4285F4";  // Primary accent (KDE blue)
-static const char 				lol_vimix7[]  			= "#5F9CFF";  // Hover / lighter blue
-
-static const char 				lol_vimix8[]  			= "#BF0303";  // Red (error / urgent)
-static const char 				lol_vimix9[]  			= "#B08000";  // Amber (warning)
-static const char 				lol_vimix10[] 			= "#FFD700";  // Yellow (attention)
-static const char 				lol_vimix11[] 			= "#006E28";  // Green (success)
-static const char 				lol_vimix12[] 			= "#444444";  // Dark neutral (borders/text)
 
 /* Vimix Dark Doder palette */
 static const char               col_vimix0[]            = "#2C2E33";  // Background (Window/View)
@@ -148,13 +108,14 @@ static const char *const 		autostart[] 			= {
     "lxpolkit", NULL,
     "/usr/lib/x86_64-linux-gnu/xfce4/notifyd/xfce4-notifyd", NULL,
     "xfce4-clipman", NULL,
+	"blueman-applet", NULL,
     "nm-tray", NULL,
     "xset", "b", "off", NULL,
-    "megasync", NULL,
+    //"megasync", NULL,
     "slstatus", NULL,
     "xfce4-screensaver", NULL,
     "xfce4-power-manager", NULL,
-	"pnmixer", NULL,
+	//"pnmixer", NULL,
     "/home/marwa/.config/dwm/rkde.sh", NULL,
     NULL
 };
@@ -203,8 +164,8 @@ static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 															col_gray4,
 															NULL };
 
-static const char 				*termcmd[]  			= { "ghostty", NULL };
-static const char 				*termcmd2[]  			= { "xfce4-terminal", NULL };
+static const char 				*termcmd[]  			= { "st", NULL };
+static const char 				*termcmd2[]  			= { "ghostty", NULL };
 
 
 /* Window rules*/
@@ -258,6 +219,7 @@ static const Rule 				rules[] 				= {
 
 	/* tag 8 */
 	{ "FreeTube",                             	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
+	{ "freetube",                             	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 	{ "io.github.celluloid_player.Celluloid", 	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 	{ "mpv",                                  	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 	{ "vlc",                                  	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
@@ -336,7 +298,7 @@ static const Key 				keys[] 					= {
     { MODKEY|ShiftMask,             XK_r,      spawn,          	SHCMD("~/.config/dwm/gamma.sh") },
 	{ MODKEY,             			XK_l,      spawn,          	SHCMD("~/.config/rofi/powermenu/type-2/powermenu.sh") },
 	{ MODKEY,             			XK_q,      spawn,          	SHCMD("~/.config/rofi/launchers/type-1/launcher.sh") },
-	{ MODKEY,             			XK_w,      spawn,          	SHCMD("flatpak run app.zen_browser.zen") },
+	{ MODKEY,             			XK_w,      spawn,          	SHCMD("brave-origin") },
 	{ MODKEY|ShiftMask,       		XK_w,      spawn,          	SHCMD("~/.config/rofi/applets/bin/browser.sh") },
 	{ MODKEY,             			XK_e,      spawn,          	SHCMD("thunar ~") },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          	SHCMD("~/.config/dwm/files.sh") },
