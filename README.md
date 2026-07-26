@@ -12,6 +12,8 @@
 
 ![dwm screenshot](dwm.png)
 
+![Desktop screenshot](screen.png)
+
 </div>
 
 ---
@@ -60,7 +62,7 @@ Every item below was verified directly against the source (`dwm.c`, `drw.c`, `co
 |---|---|
 | **System Tray** | Full systray implementation (`Systray` struct, `updatesystray()`, XEMBED handling) with `systraypinning`, `systrayonleft`, and `systrayspacing` options. |
 | **Bar Padding (vanity gaps)** | `vertpad` / `sidepad` add vertical and horizontal breathing room around the bar. |
-| **Colored / Scriptable Status Bar** | `drawstatusbar()` renders the status text with custom drawing logic instead of the stock single-color `drawbar` text path. |
+| **Colored / Scriptable Status Bar** | `drawstatusbar()` renders the status text with custom drawing logic instead of the stock single-color `drawbar` text path. Status text is fed by either a custom-built **slstatus** or **dwmblocks**, switched between depending on need. |
 | **Underline Tags** | Active/urgent tags are rendered with an underline accent instead of (or alongside) a filled background, controlled by `ulinestroke` and `ulinevoffset` and dedicated color schemes (`SchemeTagUnderline`, `SchemeTagUrgUnderline`, `SchemeTagUnderlineSel`). |
 | **Extended Color Schemes** | Beyond stock `SchemeNorm`/`SchemeSel`, adds `SchemeTitle`, `SchemeTag`, `SchemeTagSel`, `SchemeTagUrg`, and `SchemeTagEmpty` for fully independent tag/title styling. |
 | **Multiple Theme Palettes** | Ready-made Breeze Dark, Dracula, and Vimix (light & dark) color palettes defined in `config.h`, swappable via the `colors[]` mapping. |
@@ -117,7 +119,12 @@ To target a specific display:
 DISPLAY=foo.bar:1 exec dwm
 ```
 
-To feed status info into the bar (e.g. via `slstatus`, already included in `autostart`):
+The bar's status text comes from an external program feeding `xsetroot -name`. This build is switched between two setups depending on need:
+
+- **A custom-built [slstatus](https://tools.suckless.org/slstatus/)** — lightweight, polls system info directly.
+- **[dwmblocks](https://github.com/torrinfail/dwmblocks)** — modular, block-based, updates individual segments on signal.
+
+Only one should be running in `autostart` at a time. Example using slstatus-style polling:
 
 ```bash
 while xsetroot -name "`date` `uptime | sed 's/.*,//'`"
@@ -194,7 +201,8 @@ Key sections worth knowing about:
 ├── util.c / util.h     # Shared utility functions
 ├── keys.sh             # Keybinding reference/helper script
 ├── dwm.1               # Man page
-└── dwm.png             # dwm logo
+├── dwm.png             # Screenshot
+└── screen.png           # Desktop screenshot
 ```
 
 ## Credits
