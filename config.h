@@ -311,6 +311,7 @@ static const Key 				keys[] 					= {
 	{ MODKEY|ControlMask,           XK_b,      spawn,          	SHCMD("flatpak run org.kde.marknote") },
 	{ MODKEY,             			XK_a,      spawn,          	SHCMD("~/.config/bspwm/pkde.py") },
 	{ MODKEY,             			XK_z,      spawn,          	SHCMD("~/.config/bspwm/pemoji/pemoji.py") },
+	{ MODKEY|ShiftMask,             XK_z,      spawn,          	SHCMD("~/.config/dwm/cat.py white") },
 	{ MODKEY,             			XK_o,      spawn,          	SHCMD("~/.config/bspwm/blue.py") },
 	{ MODKEY,             			XK_v,      spawn,          	SHCMD("~/.config/bspwm/yt.sh") },
 	{ MODKEY|ShiftMask,             XK_v,      spawn,          	SHCMD("~/.config/bspwm/iptv.py") },
