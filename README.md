@@ -194,7 +194,7 @@ Key sections worth knowing about:
 ├── util.c / util.h     # Shared utility functions
 ├── keys.sh             # Keybinding reference/helper script
 ├── dwm.1               # Man page
-└── dwm.png             # Screenshot
+└── dwm.png             # dwm logo
 ```
 
 ## Credits
