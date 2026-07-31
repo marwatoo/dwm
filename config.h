@@ -30,12 +30,11 @@ static const int 				vertpad            		= 10;       /* vertical padding of bar
 static const int 				sidepad            		= 12;       /* horizontal padding of bar */
 
 /* Fonts */
-static const char 				*fonts[]          		= { 
-//															"UbuntuMono Nerd Font:size=14:style=Bold",		
+static const char 				*fonts[]          		= { 		
 															"JetBrainsMonoNL NFP:style=Bold:size=14:antialias=true:hinting=true:hintstyle=hintfull",
-															"Noto Sans Arabic:size=14:style=Bold",
-//															"Ubuntu Arabic:size=14:style=Bold",
-															"Noto Emoji:size=14" };
+															"Noto Emoji:size=14",
+															"Noto Color Emoji:size=14:fontformat=truetype",
+															"Noto Sans Arabic:size=14:style=Bold" };
 
 static const char 				dmenufont[]       		= "JetBrainsMonoNL NFP:style=Bold:size=13";
 
