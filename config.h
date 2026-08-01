@@ -181,6 +181,7 @@ static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 
 static const char 				*termcmd[]  			= { "st", NULL };
 static const char 				*termcmd2[]  			= { "ghostty", NULL };
+static const char 				*termcmd3[]  			= { "xfce4-terminal", NULL };
 
 
 /* Window rules*/
@@ -270,6 +271,7 @@ static const Key 				keys[] 					= {
 
 	{ MODKEY,             			XK_Return, spawn,          	{.v = termcmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          	{.v = termcmd2 } },
+	{ MODKEY|Mod1Mask,             	XK_Return, spawn,          	{.v = termcmd3 } },
 	{ MODKEY, 			            XK_r,      togglebar,      	{0} },
 
 	{ MODKEY,                       XK_Left,   shiftview,      	{.i = -1 } },
