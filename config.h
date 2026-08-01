@@ -32,8 +32,6 @@ static const int 				sidepad            		= 12;       /* horizontal padding of b
 /* Fonts */
 static const char 				*fonts[]          		= { 		
 															"JetBrainsMonoNL NFP:style=Bold:size=14:antialias=true:hinting=true:hintstyle=hintfull",
-//															"Noto Color Emoji:size=14",
-//															"Noto Emoji:size=14",
 															"Symbola:size=14:antialias=true:autohint=true",
 															"Noto Sans Arabic:size=14:style=Bold" };
 
@@ -130,9 +128,12 @@ static const unsigned int 		ulinevoffset			= 0;	/* how far above the bottom of t
 
 /* Window scaling */
 static const float 				mfact     				= 0.50; /* factor of master area size [0.05..0.95] */
-static const int 				nmaster     			= 1;    /* number of clients in master area */
 static const int 				resizehints 			= 0;    /* 1 means respect size hints in tiled resizals */
 static const int 				lockfullscreen 			= 1; /* 1 will force focus on the fullscreen window */
+
+/* Master area */
+static const int 				nmaster     			= 1;    /* number of clients in master area */
+static const int 				nmastermax  			= 6;    /* upper limit for incnmaster, tile-only */
 
 /* Focus window */
 static const int 				focusonwheel       		= 0; //O means false (no focus on mouse hover)
@@ -298,7 +299,7 @@ static const Key 				keys[] 					= {
 	{ ShiftMask,           			XK_F10,     tag,        	{.ui = 1 << 9} },
 
     { MODKEY|ShiftMask,             XK_r,      spawn,          	SHCMD("~/.config/dwm/gamma.sh") },
-	{ MODKEY|ControlMask,           XK_r,      spawn,          	SHCMD("~/.config/dwm/hotkeys.sh") },
+	{ MODKEY|ControlMask,           XK_r,      spawn,          	SHCMD("~/.config/dwm/hotkeys/hotkeys.sh") },
 	{ MODKEY,             			XK_l,      spawn,          	SHCMD("~/.config/rofi/powermenu/type-2/powermenu.sh") },
 	{ MODKEY,             			XK_q,      spawn,          	SHCMD("~/.config/rofi/launchers/type-1/launcher.sh") },
 	{ MODKEY,             			XK_w,      spawn,          	SHCMD("brave-origin") },

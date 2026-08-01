@@ -343,6 +343,10 @@ static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
 static void autostart_exec(void);
+static void quit(const Arg *arg);
+static void focusmon(const Arg *arg);
+static void tagmon(const Arg *arg);
+static Monitor *dirtomon(int dir);
 
 /* variables */
 
@@ -427,6 +431,49 @@ autostart_exec() {
 		/* skip arguments */
 		while (*++p);
 	}
+}
+
+void
+quit(const Arg *arg)
+{
+	running = 0;
+}
+
+Monitor *
+dirtomon(int dir)
+{
+	Monitor *m = NULL;
+
+	if (dir > 0) {
+		if (!(m = selmon->next))
+			m = mons;
+	} else if (selmon == mons)
+		for (m = mons; m->next; m = m->next);
+	else
+		for (m = mons; m->next != selmon; m = m->next);
+	return m;
+}
+
+void
+focusmon(const Arg *arg)
+{
+	Monitor *m;
+
+	if (!mons->next)
+		return;
+	if ((m = dirtomon(arg->i)) == selmon)
+		return;
+	unfocus(selmon->sel, 0);
+	selmon = m;
+	focus(NULL);
+}
+
+void
+tagmon(const Arg *arg)
+{
+	if (!selmon->sel || !mons->next)
+		return;
+	sendmon(selmon->sel, dirtomon(arg->i));
 }
 
 void
@@ -1468,7 +1515,11 @@ grabkeys(void)
 void
 incnmaster(const Arg *arg)
 {
-	selmon->nmaster = selmon->pertag->nmasters[selmon->pertag->curtag] = MAX(selmon->nmaster + arg->i, 0);
+	//selmon->nmaster = selmon->pertag->nmasters[selmon->pertag->curtag] = MAX(selmon->nmaster + arg->i, 0);
+	
+	if (selmon->lt[selmon->sellt]->arrange != tile)
+		return;
+	selmon->nmaster = selmon->pertag->nmasters[selmon->pertag->curtag] = MAX(MIN(selmon->nmaster + arg->i, nmastermax), 0);
 	arrange(selmon);
 }
 
