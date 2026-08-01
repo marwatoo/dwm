@@ -153,13 +153,14 @@ static const int 				focusonwheel       		= 0; //O means false (no focus on mous
 /* Layouts */
 
 static const Layout 			layouts[] 				= {
+	
     /* symbol  arrange function */
-    {	"󰕴",	dwindle		},   /* first entry is default */
-    {	"󰜩",	tile		},    
-    {	"󰹞",	monocle		},
-    {	"",   NULL		   },   /* no layout function means floating behavior */
-    {	"󰕮",	spiral		},
-    {   "󰕭",   i3layout    },   /* i3 style layout */
+    {	"[󰕴]",	dwindle		},   /* first entry is default */
+    {	"[󰜩]",	tile		},    
+    {	"[󰹞]",	monocle		},
+    {	"[󰕰]", NULL		},   /* no layout function means floating behavior */
+    {	"[󰕮]",	spiral		},
+    {   "[󰕭]", i3layout    },   /* i3 style layout */
 };
 
 /* Commands */
