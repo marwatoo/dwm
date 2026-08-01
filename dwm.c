@@ -347,6 +347,7 @@ static void quit(const Arg *arg);
 static void focusmon(const Arg *arg);
 static void tagmon(const Arg *arg);
 static Monitor *dirtomon(int dir);
+static void i3layout(Monitor *m);
 
 /* variables */
 
@@ -474,6 +475,55 @@ tagmon(const Arg *arg)
 	if (!selmon->sel || !mons->next)
 		return;
 	sendmon(selmon->sel, dirtomon(arg->i));
+}
+
+/* i3-style layout: splits the screen into n equal-width columns,
+ * full height, left to right - e.g. |win1|win2|win3|win4|. This is
+ * i3's default behaviour when new windows keep joining the same
+ * horizontal container. The last column absorbs any rounding
+ * remainder so the columns fill the screen exactly. */
+void
+i3layout(Monitor *m)
+{
+	Client *c;
+	unsigned int i, n, si;
+	int gap = m->gappx;
+	int x, w, totalw, sw, cw;
+
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if (n == 0)
+		return;
+
+	/* find the index of the selected client among tiled clients */
+	si = 0;
+	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+		if (c == m->sel)
+			si = i;
+
+	totalw = m->ww - (int)(n + 1) * gap;
+	if (totalw < (int)n)
+		totalw = (int)n; /* avoid degenerate sizes on tiny screens */
+
+	if (n == 1) {
+		sw = totalw;
+		cw = 0;
+	} else {
+		sw = (int)(totalw * m->mfact);
+		cw = (totalw - sw) / (int)(n - 1);
+	}
+
+	x = m->wx + gap;
+	i = 0;
+	for (c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
+		if (i == si)
+			w = sw;
+		else if (i == n - 1)
+			w = m->wx + m->ww - gap - x; /* absorb rounding remainder */
+		else
+			w = cw;
+		resize(c, x, m->wy + gap, w - 2 * c->bw, m->wh - 2 * gap - 2 * c->bw, 0);
+		x += w + gap;
+	}
 }
 
 void

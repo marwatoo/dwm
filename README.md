@@ -56,6 +56,7 @@ Every item below was verified directly against the source (`dwm.c`, `drw.c`, `co
 | **Aspect Resize** (AI-assisted) | `aspectresize()` resizes the focused floating window while preserving its current aspect ratio (`MOD+CTRL+h/l`). |
 | **Lock Fullscreen** | `lockfullscreen` keeps focus pinned to a fullscreen client instead of leaking to others. |
 | **Focus on Wheel toggle** | `focusonwheel` lets you disable focus-follows-scroll on mouse wheel events. |
+| **i3 layout** (AI-assisted) | `i3layout` arrangement. |
 
 ### Bar & Visuals
 
@@ -149,7 +150,7 @@ Key sections worth knowing about:
 - **`colors[]`** — active theme; swap in any of the Breeze Dark / Dracula / Vimix palettes defined above it.
 - **`autostart[]`** — programs launched on session start (compositor, wallpaper, tray apps, etc.).
 - **`rules[]`** — per-application tag/floating/monitor placement.
-- **`layouts[]`** — order and icons for `dwindle`, `tile`, `monocle`, floating, and `spiral`.
+- **`layouts[]`** — order and icons for `dwindle`, `tile`, `monocle`, floating, `spiral` and `i3layout`.
 
 ## Keybindings
 
@@ -172,7 +173,7 @@ Key sections worth knowing about:
 | `MOD + CTRL + h` / `l` | Aspect-ratio resize (floating windows) |
 | `MOD + Tab` | View previously selected tag |
 | `MOD + ALT + c` | Kill focused client |
-| `MOD + ALT + s/d/f/m` | Set layout: dwindle / tile / monocle / floating |
+| `MOD + ALT + s/d/f/m/i` | Set layout: dwindle / tile / monocle / floating / i3 |
 | `MOD + Space` | Cycle layout |
 | `MOD + SHIFT + Space` | Toggle floating |
 | `F1`–`F10` | View tag 1–10 |

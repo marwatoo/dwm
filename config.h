@@ -141,11 +141,12 @@ static const int 				focusonwheel       		= 0; //O means false (no focus on mous
 /* Layouts */
 static const Layout 			layouts[] 				= {
     /* symbol   arrange function */
-    {	"󰯴",	dwindle		},   /* first entry is default */
-    {	"󰰤",	tile		},    
-    {	"󰰏",	monocle		},
-    {	"󰰰",	NULL		},   /* no layout function means floating behavior */
-    {	"󰰡",	spiral		},
+    {	"󰕴",	dwindle		},   /* first entry is default */
+    {	"󰜩",	tile		},    
+    {	"󰹞",	monocle		},
+    {	"",	NULL		},   /* no layout function means floating behavior */
+    {	"󰕮",	spiral		},
+    {   "󰕭",    i3layout    },
 };
 
 /* Commands */
@@ -270,6 +271,7 @@ static const Key 				keys[] 					= {
 	{ MODKEY|Mod1Mask,              XK_d,      setlayout,      	{.v = &layouts[1]} },
 	{ MODKEY|Mod1Mask,              XK_f,      setlayout,      	{.v = &layouts[2]} },
 	{ MODKEY|Mod1Mask,              XK_m,      setlayout,      	{.v = &layouts[3]} },
+	{ MODKEY|Mod1Mask,              XK_i,      setlayout,       {.v = &layouts[5]} },
 	{ MODKEY,                       XK_space,  setlayout,      	{0} },
 
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, 	{0} },
