@@ -38,6 +38,7 @@ static const char 				*fonts[]          		= {
 static const char 				dmenufont[]       		= "JetBrainsMonoNL NFP:style=Bold:size=13";
 
 /* Default colors */
+
 static const char 				col_gray1[]       		= "#222222";
 static const char 				col_gray2[]       		= "#444444";
 static const char 				col_gray3[]       		= "#bbbbbb";
@@ -66,6 +67,7 @@ static const char               col_dracula13[] 		= "#FFB86C";  // Title / highl
 
 
 /* Vimix Dark Doder palette */
+
 static const char               col_vimix0[]            = "#2C2E33";  // Background (Window/View)
 static const char               col_vimix1[]            = "#363840";  // Alternate background
 static const char               col_vimix2[]            = "#454850";  // Unfocused border / divider
@@ -81,8 +83,11 @@ static const char               col_vimix11[]           = "#006E28";  // Green (
 static const char               col_vimix12[]           = "#54575F";  // Dark neutral (borders/text)
 
 /* Active colors mapping */
+
 static const char 				*colors[][3] 			= {
+
     /* 									fg          bg          border   */
+
 	[SchemeNorm]        		= { col_vimix7,  col_vimix0,  col_vimix2 },  // unfocused
 	[SchemeTitle]       		= { col_vimix6,  col_vimix0,  col_vimix2 },  // title text
 	[SchemeSel]         		= { col_vimix6,  col_vimix3,  col_vimix6 },  // focused
@@ -98,6 +103,7 @@ static const char 				*colors[][3] 			= {
 /* Autostart */
 
 //for some reason, i should put the full path of the script, maybe because dwm doesnt select ~ (home folder)
+
 static const char *const 		autostart[] 			= {
     "nitrogen", "--restore", NULL,
     "picom", "--config", "/home/marwa/.config/picom/dwm.conf", NULL,
@@ -118,38 +124,46 @@ static const char *const 		autostart[] 			= {
 };
 
 /* Tagging */
+
 static const char 				*tags[] 				= { "󰾔", "󰐤", "󰉌", "󰇟", "󰏬","󰎄", "󰍦", "󱃖", "", "󰴃" };
 static const char 				*tags2[] 				= { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱","󰎳", "󰎶", "󰎹", "󰎼", "󰽽" };
 static const int 				mytags					= 10;
 
 /* Underline tag*/
+
 static const unsigned int 		ulinestroke				= 2;	/* thickness / height of the underline */
 static const unsigned int 		ulinevoffset			= 0;	/* how far above the bottom of the bar the line should appear */
 
 /* Window scaling */
+
 static const float 				mfact     				= 0.50; /* factor of master area size [0.05..0.95] */
 static const int 				resizehints 			= 0;    /* 1 means respect size hints in tiled resizals */
 static const int 				lockfullscreen 			= 1; /* 1 will force focus on the fullscreen window */
 
 /* Master area */
+
 static const int 				nmaster     			= 1;    /* number of clients in master area */
 static const int 				nmastermax  			= 6;    /* upper limit for incnmaster, tile-only */
 
 /* Focus window */
+
 static const int 				focusonwheel       		= 0; //O means false (no focus on mouse hover)
 
+
 /* Layouts */
+
 static const Layout 			layouts[] 				= {
-    /* symbol   arrange function */
+    /* symbol  arrange function */
     {	"󰕴",	dwindle		},   /* first entry is default */
     {	"󰜩",	tile		},    
     {	"󰹞",	monocle		},
-    {	"",	NULL		},   /* no layout function means floating behavior */
+    {	"",   NULL		   },   /* no layout function means floating behavior */
     {	"󰕮",	spiral		},
-    {   "󰕭",    i3layout    },
+    {   "󰕭",   i3layout    },   /* i3 style layout */
 };
 
 /* Commands */
+
 static char 					dmenumon[2] 			= "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 															dmenumon,
@@ -170,12 +184,15 @@ static const char 				*termcmd2[]  			= { "ghostty", NULL };
 
 
 /* Window rules*/
+
 static const Rule 				rules[] 				= {
+
 	/* class                                  	instance   title   tags mask   isfloating   monitor */
 
 	{ "MEGAsync",                              	NULL, 		NULL, 	0, 			1, 			-1 },
 
 	/* tag 0 */
+
 	{ "firefox",                              	NULL, 		NULL, 	1 << 0, 	0, 			-1 },
 	{ "zen",                                  	NULL,  		NULL, 	1 << 0,  	0, 			-1 },
 	{ "Google-chrome",                        	NULL,  		NULL, 	1 << 0,  	0,  		-1 },
@@ -183,6 +200,7 @@ static const Rule 				rules[] 				= {
 	{ "Brave-origin-nightly",                   NULL,  		NULL,  	1 << 0,  	0, 			-1 },
 
 	/* tag 1 */
+
 	{ "Xfce4-terminal",                       	NULL,  		NULL,  	1 << 1, 	0, 			-1 },
 	{ "XTerm",                                	NULL,  		NULL,  	1 << 1,  	0, 			-1 },
 	{ "st-256color",                            NULL,  		NULL,  	1 << 1,  	0, 			-1 },
@@ -192,28 +210,34 @@ static const Rule 				rules[] 				= {
 	{ "St",                                		NULL,  		NULL,  	1 << 1,  	0, 			-1 },
 
 	/* tag 2 */
+
 	{ "Thunar",                               	NULL,  		NULL,  	1 << 2, 	0, 			-1 },
 	{ "com.tui.spf",                            NULL,  		NULL,  	1 << 2, 	0, 			-1 },
 
 	/* tag 3 */
+
 	{ "Gimp",                                 	NULL,  		NULL,  	1 << 3, 	0, 			-1 },
 
 	/* tag 4 */
+
 	{ "obsidian",                             	NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "WebApp-Minotes2102",                     NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "marknote",	                    		NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "MGlow",		                    		NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 
 	/* tag 5 */
+
 	{ "Spotify",                              	NULL,  		NULL,  	1 << 5, 	0, 			-1 },
 
 	/* tag 6 */
+
 	{ "TelegramDesktop",                      	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-ChatGPT5627",                     NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-DeepSeek9423",                    NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-Claude7033",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 
 	/* tag 7 */
+
 	{ "Code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "Xed",                                  	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
@@ -222,6 +246,7 @@ static const Rule 				rules[] 				= {
 	{ "kate",		                            NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 
 	/* tag 8 */
+
 	{ "FreeTube",                             	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 	{ "freetube",                             	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 	{ "io.github.celluloid_player.Celluloid", 	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
@@ -230,6 +255,7 @@ static const Rule 				rules[] 				= {
 	{ "WebApp-MyTube5416",                      NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 
 	/* tag 9 */
+
 	{ "Org.gnome.Evolution",                  	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
 	{ "gnome-calendar",                       	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
 	{ "com.tui.cal",                       		NULL,  		NULL,  	1 << 9, 	0, 			-1 },
@@ -237,8 +263,11 @@ static const Rule 				rules[] 				= {
 };
 
 /* Keys combinitions */
+
 static const Key 				keys[] 					= {
+
 	/* modifier                     key        function        	argument */
+
 	{ MODKEY,             			XK_Return, spawn,          	{.v = termcmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          	{.v = termcmd2 } },
 	{ MODKEY, 			            XK_r,      togglebar,      	{0} },
@@ -336,8 +365,11 @@ static const Key 				keys[] 					= {
 /* Button definitions */
 
 // click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin
+
 static const Button 			buttons[] 				= {
+
 	/* click                event mask      button          function        argument */
+	
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
