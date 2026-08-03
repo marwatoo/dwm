@@ -277,7 +277,6 @@ sudo apt install \
   xfce4-clipman \
   lxpolkit \
   lxappearance \
-  libinput-gestures \
   picom \
   nitrogen \
   thunar \
