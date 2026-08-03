@@ -246,8 +246,8 @@ paired with, and where each one comes from on Debian 13 (trixie).
 
 ### Misc apps
 
-- **webapp-manager** (Linux Mint)(http://packages.linuxmint.com/pool/main/w/webapp-manager/webapp-manager_1.4.6_all.deb)  — create desktop web apps
-- **Xed** (Linux Mint)(http://packages.linuxmint.com/pool/backport/x/xed/xed_3.8.9+gigi_amd64.deb) — GUI text editor
+- **webapp-manager** (Linux Mint)  — create desktop web apps
+- **Xed** (Linux Mint) — GUI text editor
 
 ### Terminals
 
@@ -283,6 +283,9 @@ sudo apt install \
   thunar \
   xfce4-terminal \
   fonts-symbola \
+  nm-tray \
+  pnmixer \
+  kdeconnect \
   fonts-noto-core
 ```
 
@@ -295,31 +298,10 @@ git clone --depth=1 https://github.com/adi1090x/rofi.git
 cd rofi && chmod +x setup.sh && ./setup.sh
 ```
 
-**nm-tray** (not packaged for Debian — build from source)
-```bash
-git clone https://github.com/hpsaturn/nm-tray.git
-cd nm-tray && mkdir build && cd build
-cmake .. && make -j$(nproc) && sudo make install
-```
-
-**pnmixer** (removed from current Debian repos — build from source)
-```bash
-sudo apt install autoconf automake libtool intltool libgtk-3-dev libasound2-dev libnotify-dev
-git clone https://github.com/nicklan/pnmixer.git
-cd pnmixer && ./autogen.sh && ./configure && make -j$(nproc) && sudo make install
-```
-
 **libinput-gestures-setup** (GUI, separate from the CLI tool above)
 ```bash
 git clone https://github.com/bulletmark/libinput-gestures.git
 cd libinput-gestures && sudo make install
-```
-
-**kdeconnect indicator**
-```bash
-sudo apt install kdeconnect
-# for a standalone tray indicator, see:
-# https://github.com/Bajoja/indicator-kdeconnect (build from source)
 ```
 
 **Superfile**
