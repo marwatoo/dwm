@@ -147,7 +147,7 @@ sudo make clean install
 
 Key sections worth knowing about:
 
-- **`fonts[]`** — font stack: monospace primary, Arabic fallback, emoji fallback.
+- **`fonts[]`** — font stack: Jetbrains nerd font, Arabic fallback, emoji fallback.
 - **`colors[]`** — active theme; swap in any of the Breeze Dark / Dracula / Vimix palettes defined above it.
 - **`autostart[]`** — programs launched on session start (compositor, wallpaper, tray apps, etc.).
 - **`rules[]`** — per-application tag/floating/monitor placement.
