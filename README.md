@@ -35,6 +35,7 @@ It's not meant to be a general-purpose distribution — it's tuned for my machin
 - [Configuration](#configuration)
 - [Keybindings](#keybindings)
 - [Repository Layout](#repository-layout)
+- [Companion Tools / Ecosystem](#companion-tools--ecosystem)
 - [Related Repositories](#related-repositories)
 - [Credits](#credits)
 
@@ -206,6 +207,156 @@ Key sections worth knowing about:
 ├── dwm.png             # Screenshot
 └── screen.png           # Desktop screenshot
 ```
+
+## Companion Tools / Ecosystem
+
+dwm intentionally does very little on its own — no menus, tray, notifications,
+or session handling. Here's the full stack of tools this build is meant to be
+paired with, and where each one comes from on Debian 13 (trixie).
+
+### Menus
+
+- **Rofi** — used for all menus (app launcher, power menu, etc), based on
+  scripts from [adi1090x/rofi](https://github.com/adi1090x/rofi)
+
+### Tray / applets
+
+- **xfce4-notifyd** — notifications
+- **nm-tray** — network tray
+- **xfce4-screensaver** — screensaver
+- **xfce4-power-manager** — power management
+- **pnmixer** — volume tray icon
+- **blueman-applet** — bluetooth tray
+- **xfce4-clipman** — clipboard tray icon
+- **lxpolkit** — polkit agent, handles root password prompts for GUI apps
+- **kdeconnect indicator** — tray indicator for KDE Connect
+
+### Appearance / input
+
+- **lxappearance** — GTK theme/icon/font appearance settings
+- **libinput-gestures** + **libinput-gestures-setup** — touchpad gestures
+  ([bulletmark/libinput-gestures](https://github.com/bulletmark/libinput-gestures))
+- **picom** — compositor
+- **nitrogen** — wallpaper manager
+
+### File managers
+
+- **Thunar** — default file manager
+- **[Superfile](https://superfile.dev/)** — terminal-based alternative to Thunar
+
+### Misc apps
+
+- **webapp-manager** (Linux Mint) — create desktop web apps
+- **Xed** (Linux Mint) — GUI text editor
+
+### Terminals
+
+- **st** — default terminal (this repo also includes the custom fribidi-based
+  Arabic shaping/bidi patch used for RTL rendering)
+- **ghostty** — used alongside Superfile for image previews
+- **xfce4-terminal** — fallback terminal if st doesn't behave as expected
+
+### Fonts
+
+- **JetBrainsMono Nerd Font (NFP)** — UI font, includes glyphs/icons for tags
+- **Symbola** — emoji support
+- **Noto Sans Arabic** — Arabic script support
+
+### Installing the ecosystem on Debian 13
+
+Most of these are available directly via `apt`:
+
+```bash
+sudo apt update
+sudo apt install \
+  rofi \
+  xfce4-notifyd \
+  xfce4-screensaver \
+  xfce4-power-manager \
+  blueman \
+  xfce4-clipman \
+  lxpolkit \
+  lxappearance \
+  libinput-gestures \
+  picom \
+  nitrogen \
+  thunar \
+  xfce4-terminal \
+  fonts-symbola \
+  fonts-noto-core
+```
+
+The following are **not** in the standard Debian repos and need to be
+installed manually:
+
+**Rofi menu scripts** (adi1090x)
+```bash
+git clone --depth=1 https://github.com/adi1090x/rofi.git
+cd rofi && chmod +x setup.sh && ./setup.sh
+```
+
+**nm-tray** (not packaged for Debian — build from source)
+```bash
+git clone https://github.com/hpsaturn/nm-tray.git
+cd nm-tray && mkdir build && cd build
+cmake .. && make -j$(nproc) && sudo make install
+```
+
+**pnmixer** (removed from current Debian repos — build from source)
+```bash
+sudo apt install autoconf automake libtool intltool libgtk-3-dev libasound2-dev libnotify-dev
+git clone https://github.com/nicklan/pnmixer.git
+cd pnmixer && ./autogen.sh && ./configure && make -j$(nproc) && sudo make install
+```
+
+**libinput-gestures-setup** (GUI, separate from the CLI tool above)
+```bash
+git clone https://github.com/bulletmark/libinput-gestures.git
+cd libinput-gestures && sudo make install
+```
+
+**kdeconnect indicator**
+```bash
+sudo apt install kdeconnect
+# for a standalone tray indicator, see:
+# https://github.com/Bajoja/indicator-kdeconnect (build from source)
+```
+
+**Superfile**
+```bash
+bash -c "$(curl -sLo- https://superfile.dev/install.sh)"
+```
+
+**webapp-manager** (Linux Mint, Debian .deb)
+```bash
+wget http://packages.linuxmint.com/pool/main/w/webapp-manager/webapp-manager_1.4.6_all.deb
+sudo apt install ./webapp-manager_1.4.6_all.deb
+```
+
+**Xed** (Linux Mint, Debian .deb)
+```bash
+wget http://packages.linuxmint.com/pool/backport/x/xed/xed_3.8.9+gigi_amd64.deb
+sudo apt install ./xed_3.8.9+gigi_amd64.deb
+```
+
+**Ghostty** (not in Debian repos — download release or build from source)
+```bash
+# see https://ghostty.org/download for the latest Debian-compatible build/instructions
+```
+
+**JetBrainsMono Nerd Font**
+```bash
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts
+wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+unzip JetBrainsMono.zip -d JetBrainsMono
+fc-cache -fv
+```
+
+> Note: `nm-tray`, `pnmixer`, and `indicator-kdeconnect` may pull in extra
+> `-dev` libraries not listed above depending on your system — if
+> `cmake`/`configure` complains about a missing dependency, install it via
+> `apt` and re-run.
 
 ## Related Repositories
 
