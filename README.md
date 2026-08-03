@@ -246,8 +246,8 @@ paired with, and where each one comes from on Debian 13 (trixie).
 
 ### Misc apps
 
-- **webapp-manager** (Linux Mint) — create desktop web apps
-- **Xed** (Linux Mint) — GUI text editor
+- **webapp-manager** (Linux Mint)(http://packages.linuxmint.com/pool/main/w/webapp-manager/webapp-manager_1.4.6_all.deb)  — create desktop web apps
+- **Xed** (Linux Mint)(http://packages.linuxmint.com/pool/backport/x/xed/xed_3.8.9+gigi_amd64.deb) — GUI text editor
 
 ### Terminals
 
