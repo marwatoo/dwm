@@ -251,7 +251,7 @@ paired with, and where each one comes from on Debian 13 (trixie).
 
 ### Terminals
 
-- **st** (https://github.com/marwatoo/st) — default terminal (this repo also includes the custom fribidi-based
+- ([**st**](https://github.com/marwatoo/st)) — default terminal (this repo also includes the custom fribidi-based
   Arabic shaping/bidi patch used for RTL rendering)
 - **ghostty** — used alongside Superfile for image previews
 - **xfce4-terminal** — fallback terminal if st doesn't behave as expected
