@@ -20,6 +20,7 @@
  *
  * To understand everything else, start reading main().
  */
+#include <ctype.h>
 #include <errno.h>
 #include <fribidi.h>
 #include <locale.h>
@@ -64,7 +65,6 @@
 #define XEMBED_FOCUS_IN             4
 #define XEMBED_MODALITY_ON         10
 #define XEMBED_MAPPED              (1 << 0)
-#define XEMBED_WINDOW_ACTIVATE      1
 #define XEMBED_WINDOW_DEACTIVATE    2
 #define VERSION_MAJOR               0
 #define VERSION_MINOR               0
@@ -260,6 +260,7 @@ static void detachstack(Client *c);
 static void drawbar(Monitor *m);
 static void drawbars(void);
 static int drawstatusbar(Monitor *m, int bh, char* text);
+static int isvalidcolor(const char *s);
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c);
@@ -420,7 +421,8 @@ autostart_exec() {
 	for (p = autostart; *p; autostart_len++, p++)
 		while (*++p);
 
-	autostart_pids = malloc(autostart_len * sizeof(pid_t));
+	if (!(autostart_pids = malloc(autostart_len * sizeof(pid_t))))
+		die("fatal: could not malloc() %u bytes\n", autostart_len * sizeof(pid_t));
 	for (p = autostart; *p; i++, p++) {
 		if ((autostart_pids[i] = fork()) == 0) {
 			setsid();
@@ -810,8 +812,10 @@ buttonpress(XEvent *e)
 
 	} else if ((c = wintoclient(ev->window))) {
 		/* focus client unless wheel scroll and focusonwheel is disabled */
-		if (focusonwheel || (ev->button != Button4 && ev->button != Button5))
+		if (focusonwheel || (ev->button != Button4 && ev->button != Button5)) {
 			focus(c);
+			restack(selmon);
+		}
 
 		XAllowEvents(dpy, ReplayPointer, CurrentTime);
 		click = ClkClientWin;
@@ -855,7 +859,7 @@ cleanup(void)
 	while (mons)
 		cleanupmon(mons);
 
-	if (showsystray) {
+	if (showsystray && systray) {
 		XUnmapWindow(dpy, systray->win);
 		XDestroyWindow(dpy, systray->win);
 		free(systray);
@@ -886,6 +890,7 @@ cleanupmon(Monitor *mon)
 	}
 	XUnmapWindow(dpy, mon->barwin);
 	XDestroyWindow(dpy, mon->barwin);
+	free(mon->pertag);
 	free(mon);
 }
 
@@ -897,7 +902,7 @@ clientmessage(XEvent *e)
 	XClientMessageEvent *cme = &e->xclient;
 	Client *c = wintoclient(cme->window);
 
-	if (showsystray && cme->window == systray->win && cme->message_type == netatom[NetSystemTrayOP]) {
+	if (showsystray && systray && cme->window == systray->win && cme->message_type == netatom[NetSystemTrayOP]) {
 		/* add systray icons */
 		if (cme->data.l[1] == SYSTEM_TRAY_REQUEST_DOCK) {
 			if (!(c = (Client *)calloc(1, sizeof(Client))))
@@ -1127,6 +1132,23 @@ detachstack(Client *c)
 	}
 }
 
+/* validate a "#RRGGBB" color string before handing it to Xft: an
+ * invalid string (wrong length, missing '#', non-hex digits -- e.g. a
+ * truncated ^c/^b code in the status text) makes drw_clr_create() call
+ * die() and take down the whole WM, so this must be checked first */
+static int
+isvalidcolor(const char *s)
+{
+	int i;
+
+	if (!s || s[0] != '#')
+		return 0;
+	for (i = 1; i < 7; i++)
+		if (!isxdigit((unsigned char)s[i]))
+			return 0;
+	return s[7] == '\0';
+}
+
 int
 drawstatusbar(Monitor *m, int bh, char* stext) {
 	int ret, i, w, x, len;
@@ -1185,36 +1207,51 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 			drw_text(drw, x - 2 * sp, vp / 2, w, bh - vp, 0, text, 0);
 			x += w;
 
-			/* process code */
-			while (text[++i] != '^') {
+			/* process code; bail out on a truncated/malformed code
+			 * (missing closing '^') instead of reading past the
+			 * end of the buffer */
+			while (text[++i] != '^' && text[i] != '\0') {
 				if (text[i] == 'c') {
+					if (!text[i+1] || !text[i+2] || !text[i+3] || !text[i+4]
+					|| !text[i+5] || !text[i+6] || !text[i+7])
+						goto done;
 					char buf[8];
 					memcpy(buf, (char*)text+i+1, 7);
 					buf[7] = '\0';
-					drw_clr_create(drw, &drw->scheme[ColFg], buf);
+					if (isvalidcolor(buf))
+						drw_clr_create(drw, &drw->scheme[ColFg], buf);
 					i += 7;
 				} else if (text[i] == 'b') {
+					if (!text[i+1] || !text[i+2] || !text[i+3] || !text[i+4]
+					|| !text[i+5] || !text[i+6] || !text[i+7])
+						goto done;
 					char buf[8];
 					memcpy(buf, (char*)text+i+1, 7);
 					buf[7] = '\0';
-					drw_clr_create(drw, &drw->scheme[ColBg], buf);
+					if (isvalidcolor(buf))
+						drw_clr_create(drw, &drw->scheme[ColBg], buf);
 					i += 7;
 				} else if (text[i] == 'd') {
 					drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
 					drw->scheme[ColBg] = scheme[SchemeNorm][ColBg];
 				} else if (text[i] == 'r') {
 					int rx = atoi(text + ++i);
-					while (text[++i] != ',');
+					while (text[i] && text[++i] != ',');
+					if (!text[i]) goto done;
 					int ry = atoi(text + ++i);
-					while (text[++i] != ',');
+					while (text[i] && text[++i] != ',');
+					if (!text[i]) goto done;
 					int rw = atoi(text + ++i);
-					while (text[++i] != ',');
+					while (text[i] && text[++i] != ',');
+					if (!text[i]) goto done;
 					int rh = atoi(text + ++i);
 					drw_rect(drw, rx + x - 2 * sp, ry + vp / 2, rw, MIN(rh, bh - vp), 1, 0);
 				} else if (text[i] == 'f') {
 					x += atoi(text + ++i);
 				}
 			}
+			if (text[i] == '\0')
+				goto done;
 			text = text + i + 1;
 			i = -1;
 			isCode = 0;
@@ -1225,6 +1262,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 		drw_rect(drw, x - 2 * sp, 0, w, bh, 1, 1);  /* full height bg */
 		drw_text(drw, x - 2 * sp, vp / 2, w, bh - vp, 0, text, 0);
 	}
+done:
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	free(p);
 	return ret;
@@ -1485,7 +1523,7 @@ getsystraywidth()
 {
 	unsigned int w = 0;
 	Client *i;
-	if(showsystray)
+	if (showsystray && systray)
 		for(i = systray->icons; i; w += i->w + systrayspacing, i = i->next) ;
 	return w ? w + systrayspacing : 1;
 }
@@ -1891,10 +1929,10 @@ removesystrayicon(Client *i)
 {
 	Client **ii;
 
-	if (!showsystray || !i)
+	if (!showsystray || !systray || !i)
 		return;
 	for (ii = &systray->icons; *ii && *ii != i; ii = &(*ii)->next);
-	if (ii)
+	if (*ii == i)
 		*ii = i->next;
 	free(i);
 }
@@ -1908,11 +1946,10 @@ resize(Client *c, int x, int y, int w, int h, int interact)
 
 void
 resizebarwin(Monitor *m) {
-	unsigned int w = m->ww;
-	if (showsystray && m == systraytomon(m) && !systrayonleft)
+	unsigned int w = m->ww - 2 * sp;
+	if (showsystray && systray && m == systraytomon(m) && !systrayonleft)
 		w -= getsystraywidth();
-	XMoveResizeWindow(dpy, m->barwin, m->wx + sp, m->by + vp, m->ww -  2 * sp, bh);
-
+	XMoveResizeWindow(dpy, m->barwin, m->wx + sp, m->by + vp, w, bh);
 }
 
 void
@@ -2608,14 +2645,14 @@ updatebars(void)
 	for (m = mons; m; m = m->next) {
 		if (m->barwin)
 			continue;
-		w = m->ww;
-		if (showsystray && m == systraytomon(m))
+		w = m->ww - 2 * sp;
+		if (showsystray && systray && m == systraytomon(m) && !systrayonleft)
 			w -= getsystraywidth();
-		m->barwin = XCreateWindow(dpy, root, m->wx + sp, m->by + vp, m->ww - 2 * sp, bh, 0, DefaultDepth(dpy, screen),
+		m->barwin = XCreateWindow(dpy, root, m->wx + sp, m->by + vp, w, bh, 0, DefaultDepth(dpy, screen),
 				CopyFromParent, DefaultVisual(dpy, screen),
 				CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);
 		XDefineCursor(dpy, m->barwin, cursor[CurNormal]->cursor);
-		if (showsystray && m == systraytomon(m))
+		if (showsystray && systray && m == systraytomon(m))
 			XMapRaised(dpy, systray->win);
 		XMapRaised(dpy, m->barwin);
 		XSetClassHint(dpy, m->barwin, &ch);
@@ -2800,12 +2837,24 @@ void
 updatesystrayicongeom(Client *i, int w, int h)
 {
 	if (i) {
-        i->w = w = 20;
-        i->h = h = 20;
+		/* respect the icon's own requested size, but never let it
+		 * exceed the bar height or collapse to nothing */
+		if (w <= 0 || h <= 0) {
+			w = bh;
+			h = bh;
+		}
+		if (i->hintsvalid && i->maxw)
+			w = MIN(w, i->maxw);
+		if (i->hintsvalid && i->maxh)
+			h = MIN(h, i->maxh);
+		w = MIN(w, bh);
+		h = MIN(h, bh);
+		i->w = w;
+		i->h = h;
 		i->y = ((bh - h) / 2); // Calculate y to center icon vertically
 		i->x = ((bh - w) / 2); // Calculate y to center icon vertically
-        XMoveResizeWindow(dpy, i->win, i->x, i->y, i->w, i->h);
-    }
+		XMoveResizeWindow(dpy, i->win, i->x, i->y, i->w, i->h);
+	}
 }
 void
 updatesystrayiconstate(Client *i, XPropertyEvent *ev)
@@ -3022,7 +3071,7 @@ Client *
 wintosystrayicon(Window w) {
 	Client *i = NULL;
 
-	if (!showsystray || !w)
+	if (!showsystray || !systray || !w)
 		return i;
 	for (i = systray->icons; i && i->win != w; i = i->next) ;
 	return i;
