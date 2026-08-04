@@ -348,6 +348,8 @@ This dwm build is one piece of a small suckless-based setup. The status bar's co
 |---|---|
 | [marwatoo/slstatus](https://github.com/marwatoo/slstatus) | A personalized [slstatus](https://tools.suckless.org/slstatus/) build — polling-based, colored/icon-driven bar segments, custom volume & brightness scripts. |
 | [marwatoo/dwmblocks](https://github.com/marwatoo/dwmblocks) | A from-scratch rewrite of dwmblocks using XCB — modular, signal-driven blocks with independent update intervals. |
+| [marwatoo/st](https://github.com/marwatoo/st) | Marwatoo's build of st (simple terminal) |
+
 
 ## Credits
 
