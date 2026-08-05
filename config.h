@@ -102,25 +102,25 @@ static const char 				*colors[][3] 			= {
 
 /* Autostart */
 
-//for some reason, i should put the full path of the script, maybe because dwm doesnt select ~ (home folder)
-
 static const char *const 		autostart[] 			= {
-    "nitrogen", "--restore", NULL,
-    "picom", "--config", "/home/marwa/.config/picom/dwm.conf", NULL,
+    
+	"nitrogen", "--restore", NULL,
+    "/bin/sh", "-c", "picom --config \"$HOME/.config/picom/dwm.conf\"", NULL,
     "libinput-gestures-setup", "start", NULL,
     "setxkbmap", "-option", "grp:caps_toggle", "fr,ma", NULL,
     "lxpolkit", NULL,
     "/usr/lib/x86_64-linux-gnu/xfce4/notifyd/xfce4-notifyd", NULL,
     "xfce4-clipman", NULL,
-	"blueman-applet", NULL,
+    "blueman-applet", NULL,
     "nm-tray", NULL,
     "xset", "b", "off", NULL,
     "slstatus", NULL,
     "xfce4-screensaver", NULL,
     "xfce4-power-manager", NULL,
-	"pnmixer", NULL,
-    "/home/marwa/.config/dwm/rkde.sh", NULL,
+    "pnmixer", NULL,
+    "/bin/sh", "-c", "$HOME/.config/dwm/rkde.sh", NULL,
     NULL
+	
 };
 
 /* Tagging */
