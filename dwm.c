@@ -160,7 +160,7 @@ typedef struct Client Client;
 
 struct Client
 	{
-		char name[256];
+		char name[512];
 		float mina, maxa;
 		int x, y, w, h;
 		int oldx, oldy, oldw, oldh;
@@ -749,10 +749,27 @@ apply_fribidi(char *str)
 	FriBidiParType base = FRIBIDI_PAR_ON;
 	FriBidiCharSet charset;
 
+	if (len <= 0 || len >= 1024) {
+		strncpy(fribidi_text, str, sizeof(fribidi_text) - 1);
+		fribidi_text[sizeof(fribidi_text) - 1] = '\0';
+		return;
+	}
+
 	charset = fribidi_parse_charset("UTF-8");
 	len = fribidi_charset_to_unicode(charset, str, len, logical);
+	if (len <= 0) {
+		/* conversion failed/produced nothing (e.g. malformed UTF-8) -
+		 * never leave the bar blank, just show the raw string. */
+		strncpy(fribidi_text, str, sizeof(fribidi_text) - 1);
+		fribidi_text[sizeof(fribidi_text) - 1] = '\0';
+		return;
+	}
 	fribidi_log2vis(logical, len, &base, visual, NULL, NULL, NULL);
 	fribidi_unicode_to_charset(charset, visual, len, fribidi_text);
+	if (fribidi_text[0] == '\0' && str[0] != '\0') {
+		strncpy(fribidi_text, str, sizeof(fribidi_text) - 1);
+		fribidi_text[sizeof(fribidi_text) - 1] = '\0';
+	}
 }
 
 void
@@ -1341,7 +1358,7 @@ drawbar(Monitor *m)
     if (w > bh) {
         if (m->sel) {
             int title_w = w - 2 * sp;     /* use consistent width for both check and draw */
-            int mid = (title_w - TEXTW(m->sel->name)) / 2;
+            int mid = (title_w - (int)TEXTW(m->sel->name)) / 2;
             if (mid < lrpad / 2)
                 mid = lrpad / 2;
 
@@ -1548,6 +1565,27 @@ gettextprop(Window w, Atom atom, char *text, unsigned int size)
 	}
 	text[size - 1] = '\0';
 	XFree(name.value);
+
+	/* strip a trailing UTF-8 sequence left dangling by the strncpy
+	 * truncation above (e.g. a multi-byte lead byte with no/partial
+	 * continuation bytes), which would otherwise be handed to
+	 * apply_fribidi()/Xft as malformed input. */
+	{
+		int len = strlen(text);
+		int i = len - 1;
+		int back = 0;
+		while (i >= 0 && (text[i] & 0xC0) == 0x80 && back < 3) {
+			i--;
+			back++;
+		}
+		if (i >= 0 && (unsigned char)text[i] >= 0xC0) {
+			int expect = ((unsigned char)text[i] >= 0xF0) ? 4 :
+			             ((unsigned char)text[i] >= 0xE0) ? 3 : 2;
+			if (len - i < expect)
+				text[i] = '\0';
+		}
+	}
+
 	return 1;
 }
 

@@ -32,7 +32,8 @@ static const int 				sidepad            		= 12;       /* horizontal padding of b
 /* Fonts */
 static const char 				*fonts[]          		= { 		
 															"JetBrainsMonoNL NFP:style=Bold:size=14:antialias=true:hinting=true:hintstyle=hintfull",
-															"Symbola:size=14:antialias=true:autohint=true",
+															"Symbola:size=14:style=Bold:antialias=true:autohint=true",
+//															"Noto Color Emoji:size=14:antialias=true:autohint=true",
 															"Noto Sans Arabic:size=14:style=Bold" };
 
 static const char 				dmenufont[]       		= "JetBrainsMonoNL NFP:style=Bold:size=13";
@@ -341,6 +342,7 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_e,      spawn,          	SHCMD("~/.config/dwm/files.sh") },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          	SHCMD("thunar ~") },
 	{ MODKEY,             			XK_y,      spawn,          	SHCMD("~/.config/dwm/switch.sh") },
+	{ MODKEY|ShiftMask,             XK_y,      spawn,          	SHCMD("~/.config/dwm/killbar.sh") },
 	{ MODKEY,             			XK_b,      spawn,          	SHCMD("st -c MGlow -e glow ~/MEGA/Marwa/") },
 	{ MODKEY|ShiftMask,             XK_b,      spawn,          	SHCMD("obsidian") },
 	{ MODKEY|ControlMask,           XK_b,      spawn,          	SHCMD("flatpak run org.kde.marknote") },
