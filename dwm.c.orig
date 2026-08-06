@@ -1169,7 +1169,6 @@ isvalidcolor(const char *s)
 int
 drawstatusbar(Monitor *m, int bh, char* stext) {
 	int ret, i, w, x, len;
-	int userRect = 0; /* set by ^r: suppresses the auto full-height bg for the next block only */
 	short isCode = 0;
 	char *text;
 	char *p;
@@ -1221,10 +1220,8 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 			isCode = 1;
 			text[i] = '\0';
 			w = TEXTW(text) - lrpad;
-			if (!userRect)
-				drw_rect(drw, x - 2 * sp, 0, w, bh, 1, 1);  /* full height bg, skipped if ^r was used for this block */
+			drw_rect(drw, x - 2 * sp, 0, w, bh, 1, 1);  /* full height bg */
 			drw_text(drw, x - 2 * sp, vp / 2, w, bh - vp, 0, text, 0);
-			userRect = 0;
 			x += w;
 
 			/* process code; bail out on a truncated/malformed code
@@ -1254,7 +1251,6 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 				} else if (text[i] == 'd') {
 					drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
 					drw->scheme[ColBg] = scheme[SchemeNorm][ColBg];
-					userRect = 0;
 				} else if (text[i] == 'r') {
 					int rx = atoi(text + ++i);
 					while (text[i] && text[++i] != ',');
@@ -1267,7 +1263,6 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 					if (!text[i]) goto done;
 					int rh = atoi(text + ++i);
 					drw_rect(drw, rx + x - 2 * sp, ry + vp / 2, rw, MIN(rh, bh - vp), 1, 0);
-					userRect = 1;
 				} else if (text[i] == 'f') {
 					x += atoi(text + ++i);
 				}
@@ -1281,8 +1276,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 	}
 	if (!isCode) {
 		w = TEXTW(text) - lrpad;
-		if (!userRect)
-			drw_rect(drw, x - 2 * sp, 0, w, bh, 1, 1);  /* full height bg, skipped if ^r was used for this block */
+		drw_rect(drw, x - 2 * sp, 0, w, bh, 1, 1);  /* full height bg */
 		drw_text(drw, x - 2 * sp, vp / 2, w, bh - vp, 0, text, 0);
 	}
 done:
