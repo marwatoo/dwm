@@ -140,7 +140,7 @@ static const unsigned int 		ulinevoffset			= 0;	/* how far above the bottom of t
 static const float 				mfact     				= 0.50; /* factor of master area size [0.05..0.95] */
 static const int 				resizehints 			= 0;    /* 1 means respect size hints in tiled resizals */
 static const int 				lockfullscreen 			= 1; /* 1 will force focus on the fullscreen window */
-
+static const int 				refreshrate 			= 120;  /* refresh rate (per second) for client move/resize */
 /* Master area */
 
 static const int 				nmaster     			= 1;    /* number of clients in master area */
@@ -381,6 +381,10 @@ static const Button 			buttons[] 				= {
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button4,        shiftview,    	{.i = -1 } },
+	{ ClkClientWin,         MODKEY,         Button5,        shiftview,    	{.i = +1 } },
+	{ ClkRootWin,         	MODKEY,         Button4,        shiftview,    	{.i = -1 } },
+	{ ClkRootWin,         	MODKEY,         Button5,        shiftview,    	{.i = +1 } },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },

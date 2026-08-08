@@ -2,7 +2,7 @@
 
 # marwatoo/dwm
 
-**A personalized build of [dwm](https://dwm.suckless.org) 6.6 — the dynamic window manager**
+**A personalized build of [dwm](https://dwm.suckless.org) 6.8 — the dynamic window manager**
 
 *Gaps · Systray · RTL/Arabic support · Fibonacci layouts · Custom AI-assisted patches*
 

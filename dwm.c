@@ -239,7 +239,7 @@ static void dwindle(Monitor *mon);
 static void spiral(Monitor *mon);
 static void applyrules(Client *c);
 static void apply_fribidi(char *str);
-static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
+static int  applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
 static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void aspectresize(const Arg *arg);
@@ -259,8 +259,8 @@ static void detach(Client *c);
 static void detachstack(Client *c);
 static void drawbar(Monitor *m);
 static void drawbars(void);
-static int drawstatusbar(Monitor *m, int bh, char* text);
-static int isvalidcolor(const char *s);
+static int  drawstatusbar(Monitor *m, int bh, char* text);
+static int  isvalidcolor(const char *s);
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c);
@@ -271,10 +271,10 @@ static void prepend(Client *c);
 static void rotatestack(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
-static int getrootptr(int *x, int *y);
+static int  getrootptr(int *x, int *y);
 static long getstate(Window w);
 static unsigned int getsystraywidth();
-static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
+static int  gettextprop(Window w, Atom atom, char *text, unsigned int size);
 static void grabbuttons(Client *c, int focused);
 static void grabkeys(void);
 static void incnmaster(const Arg *arg);
@@ -299,7 +299,7 @@ static void resizerequest(XEvent *e);
 static void restack(Monitor *m);
 static void run(void);
 static void scan(void);
-static int sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
+static int  sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
@@ -325,7 +325,7 @@ static void unmapnotify(XEvent *e);
 static void updatebarpos(Monitor *m);
 static void updatebars(void);
 static void updateclientlist(void);
-static int updategeom(void);
+static int  updategeom(void);
 static void updatenumlockmask(void);
 static void updatesizehints(Client *c);
 static void updatestatus(void);
@@ -339,9 +339,9 @@ static void view(const Arg *arg);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
 static Client *wintosystrayicon(Window w);
-static int xerror(Display *dpy, XErrorEvent *ee);
-static int xerrordummy(Display *dpy, XErrorEvent *ee);
-static int xerrorstart(Display *dpy, XErrorEvent *ee);
+static int  xerror(Display *dpy, XErrorEvent *ee);
+static int  xerrordummy(Display *dpy, XErrorEvent *ee);
+static int  xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
 static void autostart_exec(void);
 static void quit(const Arg *arg);
@@ -479,11 +479,7 @@ tagmon(const Arg *arg)
 	sendmon(selmon->sel, dirtomon(arg->i));
 }
 
-/* i3-style layout: splits the screen into n equal-width columns,
- * full height, left to right - e.g. |win1|win2|win3|win4|. This is
- * i3's default behaviour when new windows keep joining the same
- * horizontal container. The last column absorbs any rounding
- * remainder so the columns fill the screen exactly. */
+/* i3-style layout: splits the screen into n columns */
 void
 i3layout(Monitor *m)
 {
@@ -570,7 +566,7 @@ rotatestack(const Arg *arg)
 		for (c = nexttiled(selmon->clients); c && nexttiled(c->next); c = nexttiled(c->next));
 		if (c){
 			detach(c);
-			prepend(c);      /* ADD TO FRONT, not back */
+			prepend(c);      /* ADD TO FRONT */
 			detachstack(c);
 			attachstack(c);  /* ADD TO TOP OF STACK */
 		}
@@ -758,8 +754,7 @@ apply_fribidi(char *str)
 	charset = fribidi_parse_charset("UTF-8");
 	len = fribidi_charset_to_unicode(charset, str, len, logical);
 	if (len <= 0) {
-		/* conversion failed/produced nothing (e.g. malformed UTF-8) -
-		 * never leave the bar blank, just show the raw string. */
+		/* when conversion failed,show the raw string. */
 		strncpy(fribidi_text, str, sizeof(fribidi_text) - 1);
 		fribidi_text[sizeof(fribidi_text) - 1] = '\0';
 		return;
@@ -1006,7 +1001,6 @@ configurenotify(XEvent *e)
 	XConfigureEvent *ev = &e->xconfigure;
 	int dirty;
 
-	/* TODO: updategeom handling sucks, needs to be simplified */
 	if (ev->window == root) {
 		dirty = (sw != ev->width || sh != ev->height);
 		sw = ev->width;
@@ -1169,7 +1163,6 @@ isvalidcolor(const char *s)
 int
 drawstatusbar(Monitor *m, int bh, char* stext) {
 	int ret, i, w, x, len;
-	int userRect = 0; /* set by ^r: suppresses the auto full-height bg for the next block only */
 	short isCode = 0;
 	char *text;
 	char *p;
@@ -1221,10 +1214,8 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 			isCode = 1;
 			text[i] = '\0';
 			w = TEXTW(text) - lrpad;
-			if (!userRect)
-				drw_rect(drw, x - 2 * sp, 0, w, bh, 1, 1);  /* full height bg, skipped if ^r was used for this block */
+			drw_rect(drw, x - 2 * sp, 0, w, bh, 1, 1);  /* full height bg */
 			drw_text(drw, x - 2 * sp, vp / 2, w, bh - vp, 0, text, 0);
-			userRect = 0;
 			x += w;
 
 			/* process code; bail out on a truncated/malformed code
@@ -1254,7 +1245,6 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 				} else if (text[i] == 'd') {
 					drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
 					drw->scheme[ColBg] = scheme[SchemeNorm][ColBg];
-					userRect = 0;
 				} else if (text[i] == 'r') {
 					int rx = atoi(text + ++i);
 					while (text[i] && text[++i] != ',');
@@ -1267,7 +1257,6 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 					if (!text[i]) goto done;
 					int rh = atoi(text + ++i);
 					drw_rect(drw, rx + x - 2 * sp, ry + vp / 2, rw, MIN(rh, bh - vp), 1, 0);
-					userRect = 1;
 				} else if (text[i] == 'f') {
 					x += atoi(text + ++i);
 				}
@@ -1281,8 +1270,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 	}
 	if (!isCode) {
 		w = TEXTW(text) - lrpad;
-		if (!userRect)
-			drw_rect(drw, x - 2 * sp, 0, w, bh, 1, 1);  /* full height bg, skipped if ^r was used for this block */
+		drw_rect(drw, x - 2 * sp, 0, w, bh, 1, 1);
 		drw_text(drw, x - 2 * sp, vp / 2, w, bh - vp, 0, text, 0);
 	}
 done:
@@ -1533,10 +1521,13 @@ getstate(Window w)
 	Atom real;
 
 	if (XGetWindowProperty(dpy, w, wmatom[WMState], 0L, 2L, False, wmatom[WMState],
-		&real, &format, &n, &extra, (unsigned char **)&p) != Success)
+		//&real, &format, &n, &extra, (unsigned char **)&p) != Success)
+		&real, &format, &n, &extra, &p) != Success)
 		return -1;
-	if (n != 0)
-		result = *p;
+	//if (n != 0)
+	if (n != 0 && format == 32)
+		// result = *p;
+		result = *(long *)p;
 	XFree(p);
 	return result;
 }
@@ -1646,9 +1637,7 @@ grabkeys(void)
 
 void
 incnmaster(const Arg *arg)
-{
-	//selmon->nmaster = selmon->pertag->nmasters[selmon->pertag->curtag] = MAX(selmon->nmaster + arg->i, 0);
-	
+{	
 	if (selmon->lt[selmon->sellt]->arrange != tile)
 		return;
 	selmon->nmaster = selmon->pertag->nmasters[selmon->pertag->curtag] = MAX(MIN(selmon->nmaster + arg->i, nmastermax), 0);
@@ -1860,7 +1849,7 @@ movemouse(const Arg *arg)
 			handler[ev.type](&ev);
 			break;
 		case MotionNotify:
-			if ((ev.xmotion.time - lasttime) <= (1000 / 60))
+			if ((ev.xmotion.time - lasttime) <= (1000 / refreshrate))
 				continue;
 			lasttime = ev.xmotion.time;
 
@@ -2040,7 +2029,7 @@ resizemouse(const Arg *arg)
 			handler[ev.type](&ev);
 			break;
 		case MotionNotify:
-			if ((ev.xmotion.time - lasttime) <= (1000 / 60))
+			if ((ev.xmotion.time - lasttime) <= (1000 / refreshrate))
 				continue;
 			lasttime = ev.xmotion.time;
 
@@ -2199,6 +2188,8 @@ sendmon(Client *c, Monitor *m)
 	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
 	attach(c);
 	attachstack(c);
+	if (c->isfullscreen)
+		resizeclient(c, m->mx, m->my, m->mw, m->mh);
 	focus(NULL);
 	arrange(NULL);
 }
@@ -2251,12 +2242,12 @@ sendevent(Window w, Atom proto, int mask, long d0, long d1, long d2, long d3, lo
 void
 setfocus(Client *c)
 {
-	if (!c->neverfocus) {
+	if (!c->neverfocus)
 		XSetInputFocus(dpy, c->win, RevertToPointerRoot, CurrentTime);
-		XChangeProperty(dpy, root, netatom[NetActiveWindow],
+	XChangeProperty(dpy, root, netatom[NetActiveWindow],
 			XA_WINDOW, 32, PropModeReplace,
 			(unsigned char *) &(c->win), 1);
-	}
+	
 	sendevent(c->win, wmatom[WMTakeFocus], NoEventMask, wmatom[WMTakeFocus], CurrentTime, 0, 0, 0);
 }
 
@@ -2517,7 +2508,7 @@ tile(Monitor *m)
 void
 togglebar(const Arg *arg)
 {
-    // selmon->showbar = selmon->pertag->showbars[selmon->pertag->curtag] = !selmon->showbar;
+    
 	selmon->showbar = !selmon->showbar;
     updatebarpos(selmon);
     resizebarwin(selmon);
@@ -2607,9 +2598,6 @@ toggleview(const Arg *arg)
 		selmon->sellt = selmon->pertag->sellts[selmon->pertag->curtag];
 		selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt];
 		selmon->lt[selmon->sellt^1] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt^1];
-
-		/*if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
-			togglebar(NULL);*/
 
 		focus(NULL);
 		arrange(selmon);
@@ -3090,9 +3078,6 @@ view(const Arg *arg)
 	selmon->sellt = selmon->pertag->sellts[selmon->pertag->curtag];
 	selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt];
 	selmon->lt[selmon->sellt^1] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt^1];
-
-	/*if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
-		togglebar(NULL);*/
 
 	focus(NULL);
 	arrange(selmon);
