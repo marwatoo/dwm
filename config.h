@@ -238,6 +238,7 @@ static const Rule 				rules[] 				= {
 	{ "WebApp-ChatGPT5627",                     NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-DeepSeek9423",                    NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-Claude7033",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
+	{ "WebApp-Gemini9268",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 
 	/* tag 7 */
 
