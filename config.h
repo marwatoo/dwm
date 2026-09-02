@@ -105,6 +105,7 @@ static const char 				*colors[][3] 			= {
 
 static const char *const 		autostart[] 			= {
     
+	"/bin/sh", "-c", "$HOME/.config/dwm/qt.sh", "on", NULL,
 	"nitrogen", "--restore", NULL,
     "/bin/sh", "-c", "picom --config \"$HOME/.config/picom/dwm.conf\"", NULL,
     "libinput-gestures-setup", "start", NULL,
@@ -181,10 +182,9 @@ static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 															col_gray4,
 															NULL };
 
-static const char 				*termcmd[]  			= { "st", NULL };
+static const char 				*termcmd[]  			= { "xfce4-terminal", NULL };
 static const char 				*termcmd2[]  			= { "ghostty", NULL };
-static const char 				*termcmd3[]  			= { "xfce4-terminal", NULL };
-
+static const char 				*termcmd3[]  			= { "st", NULL };
 
 /* Window rules*/
 
@@ -209,8 +209,7 @@ static const Rule 				rules[] 				= {
 	{ "st-256color",                            NULL,  		NULL,  	1 << 1,  	0, 			-1 },
 	{ "com.mitchellh.ghostty",                  NULL,  		NULL,  	1 << 1,  	0, 			-1 },
 	{ "kitty",                                	NULL,  		NULL,  	1 << 1,  	0, 			-1 },
-	{ "st",                                		NULL,  		NULL,  	1 << 1,  	0, 			-1 },
-	{ "St",                                		NULL,  		NULL,  	1 << 1,  	0, 			-1 },
+	{ "stterm",                                	NULL,  		NULL,  	1 << 1,  	0, 			-1 },
 
 	/* tag 2 */
 
@@ -241,8 +240,7 @@ static const Rule 				rules[] 				= {
 	{ "WebApp-Gemini9268",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 
 	/* tag 7 */
-
-	{ "Code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+	
 	{ "code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "Xed",                                  	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "com.tui.micro",                          NULL,  		NULL,  	1 << 7, 	0, 			-1 },
