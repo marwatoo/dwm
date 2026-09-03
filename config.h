@@ -224,6 +224,9 @@ static const Rule 				rules[] 				= {
 
 	{ "obsidian",                             	NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "WebApp-Minotes2102",                     NULL,  		NULL,  	1 << 4, 	0, 			-1 },
+	{ "WebApp-ArabicNotes2658",                 NULL,  		NULL,  	1 << 4, 	0, 			-1 },
+	{ "WebApp-Notes7889",                 		NULL,  		NULL,  	1 << 4, 	0, 			-1 },
+	{ "WebApp-StickyNotes2373",                 NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "marknote",	                    		NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "MGlow",		                    		NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 
@@ -238,6 +241,7 @@ static const Rule 				rules[] 				= {
 	{ "WebApp-DeepSeek9423",                    NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-Claude7033",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-Gemini9268",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
+	{ "WebApp-ChatGPT2320",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 
 	/* tag 7 */
 	
