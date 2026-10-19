@@ -245,7 +245,7 @@ static const Rule 				rules[] 				= {
 
 	/* tag 7 */
 	
-	{ "code",                                 	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
+	{ "com.microsoft.VSCode",                   NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "Xed",                                  	NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "Mousepad",                               NULL,  		NULL,  	1 << 7, 	0, 			-1 },
 	{ "com.tui.micro",                          NULL,  		NULL,  	1 << 7, 	0, 			-1 },
