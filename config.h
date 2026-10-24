@@ -237,6 +237,7 @@ static const Rule 				rules[] 				= {
 	/* tag 6 */
 
 	{ "TelegramDesktop",                      	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
+	{ "org.signal.Signal",                      NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-ChatGPT5627",                     NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-DeepSeek9423",                    NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "WebApp-Claude7033",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
