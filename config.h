@@ -114,13 +114,14 @@ static const char *const 		autostart[] 			= {
     "/usr/lib/x86_64-linux-gnu/xfce4/notifyd/xfce4-notifyd", NULL,
     "xfce4-clipman", NULL,
     "blueman-applet", NULL,
-    "nm-tray", NULL,
+    //"nm-tray", NULL,
+	"nm-applet", NULL,
     "xset", "b", "off", NULL,
     "slstatus", NULL,
     "xfce4-screensaver", NULL,
     "xfce4-power-manager", NULL,
     "pnmixer", NULL,
-    "/bin/sh", "-c", "$HOME/.config/dwm/rkde.sh", NULL,
+    //"/bin/sh", "-c", "$HOME/.config/dwm/rkde.sh", NULL,
     NULL
 	
 };
