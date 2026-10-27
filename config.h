@@ -104,8 +104,7 @@ static const char 				*colors[][3] 			= {
 /* Autostart */
 
 static const char *const 		autostart[] 			= {
-    
-	"/bin/sh", "-c", "$HOME/.config/dwm/qt.sh", "on", NULL,
+
 	"nitrogen", "--restore", NULL,
     "/bin/sh", "-c", "picom --config \"$HOME/.config/picom/dwm.conf\"", NULL,
     "libinput-gestures-setup", "start", NULL,
@@ -114,14 +113,12 @@ static const char *const 		autostart[] 			= {
     "/usr/lib/x86_64-linux-gnu/xfce4/notifyd/xfce4-notifyd", NULL,
     "xfce4-clipman", NULL,
     "blueman-applet", NULL,
-    //"nm-tray", NULL,
 	"nm-applet", NULL,
     "xset", "b", "off", NULL,
     "slstatus", NULL,
     "xfce4-screensaver", NULL,
     "xfce4-power-manager", NULL,
     "pnmixer", NULL,
-    //"/bin/sh", "-c", "$HOME/.config/dwm/rkde.sh", NULL,
     NULL
 	
 };
@@ -352,16 +349,16 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_b,      spawn,          	SHCMD("st -c MGlow -e glow ~/MEGA/Marwa/") },
 	{ MODKEY|ShiftMask,             XK_b,      spawn,          	SHCMD("obsidian") },
 	{ MODKEY|ControlMask,           XK_b,      spawn,          	SHCMD("flatpak run org.kde.marknote") },
-	{ MODKEY,             			XK_a,      spawn,          	SHCMD("~/.config/bspwm/pkde.py") },
-	{ MODKEY,             			XK_z,      spawn,          	SHCMD("~/.config/bspwm/pemoji/pemoji.py") },
-	{ MODKEY,             			XK_o,      spawn,          	SHCMD("~/.config/bspwm/blue.py") },
-	{ MODKEY,             			XK_v,      spawn,          	SHCMD("~/.config/bspwm/yt.sh") },
+	//{ MODKEY,             			XK_a,      spawn,          	SHCMD("~/.config/bspwm/pkde.py") },
+	{ MODKEY,             			XK_z,      spawn,          	SHCMD("~/.config/dwm/adw/emoji_picker.py") },
+	{ MODKEY,             			XK_o,      spawn,          	SHCMD("~/.config/dwm/adw/bluetooth.py") },
+	{ MODKEY,             			XK_v,      spawn,          	SHCMD("~/.config/dwm/yt.sh") },
 	{ MODKEY|ShiftMask,             XK_v,      spawn,          	SHCMD("pavucontrol-qt") },
 	{ MODKEY,             			XK_x,      spawn,          	SHCMD("~/.config/dwm/nvim.sh") },
 	{ MODKEY|ControlMask,           XK_x,      spawn,          	SHCMD("xed") },
 	{ MODKEY|ShiftMask,             XK_x, 	   spawn,          	SHCMD("~/.config/dwm/edit.sh") },
-	{ MODKEY,             			XK_u,      spawn,          	SHCMD("code --password-store=kwallet6") },
-	{ MODKEY,             			XK_n,      spawn,          	SHCMD("~/.config/bspwm/ocr.sh") },
+	{ MODKEY,             			XK_u,      spawn,          	SHCMD("code") },a
+	{ MODKEY,             			XK_n,      spawn,          	SHCMD("~/.config/dwm/ocr.sh") },
 	{ MODKEY|ShiftMask,             XK_u, 	   spawn,          	SHCMD("~/.config/dwm/cal.sh") },
 	
 	{ 0,			XF86XK_AudioLowerVolume,   spawn,			SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
