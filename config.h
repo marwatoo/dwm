@@ -349,7 +349,6 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_b,      spawn,          	SHCMD("st -c MGlow -e glow ~/MEGA/Marwa/") },
 	{ MODKEY|ShiftMask,             XK_b,      spawn,          	SHCMD("obsidian") },
 	{ MODKEY|ControlMask,           XK_b,      spawn,          	SHCMD("flatpak run org.kde.marknote") },
-	//{ MODKEY,             			XK_a,      spawn,          	SHCMD("~/.config/bspwm/pkde.py") },
 	{ MODKEY,             			XK_z,      spawn,          	SHCMD("~/.config/dwm/adw/emoji_picker.py") },
 	{ MODKEY,             			XK_o,      spawn,          	SHCMD("~/.config/dwm/adw/bluetooth.py") },
 	{ MODKEY,             			XK_v,      spawn,          	SHCMD("~/.config/dwm/yt.sh") },
@@ -357,7 +356,7 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_x,      spawn,          	SHCMD("~/.config/dwm/nvim.sh") },
 	{ MODKEY|ControlMask,           XK_x,      spawn,          	SHCMD("xed") },
 	{ MODKEY|ShiftMask,             XK_x, 	   spawn,          	SHCMD("~/.config/dwm/edit.sh") },
-	{ MODKEY,             			XK_u,      spawn,          	SHCMD("code") },a
+	{ MODKEY,             			XK_u,      spawn,          	SHCMD("code --password-store=gnome-libsecret") },
 	{ MODKEY,             			XK_n,      spawn,          	SHCMD("~/.config/dwm/ocr.sh") },
 	{ MODKEY|ShiftMask,             XK_u, 	   spawn,          	SHCMD("~/.config/dwm/cal.sh") },
 	
