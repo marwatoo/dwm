@@ -105,20 +105,7 @@ static const char 				*colors[][3] 			= {
 
 static const char *const 		autostart[] 			= {
 
-	"nitrogen", "--restore", NULL,
-    "/bin/sh", "-c", "picom --config \"$HOME/.config/picom/dwm.conf\"", NULL,
-    "libinput-gestures-setup", "start", NULL,
-    "setxkbmap", "-option", "grp:caps_toggle", "fr,ma", NULL,
-    "lxpolkit", NULL,
-    "/usr/lib/x86_64-linux-gnu/xfce4/notifyd/xfce4-notifyd", NULL,
-    "xfce4-clipman", NULL,
-    "blueman-applet", NULL,
-	"nm-applet", NULL,
-    "xset", "b", "off", NULL,
-    "slstatus", NULL,
-    "xfce4-screensaver", NULL,
-    "xfce4-power-manager", NULL,
-    "pnmixer", NULL,
+	"/bin/sh", "-c", "\"$HOME/.config/dwm/start.sh\"", NULL,
     NULL
 	
 };
