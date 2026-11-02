@@ -167,9 +167,9 @@ static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 															col_gray4,
 															NULL };
 
-static const char 				*termcmd[]  			= { "xfce4-terminal", NULL };
+static const char 				*termcmd3[]  			= { "xfce4-terminal", NULL };
 static const char 				*termcmd2[]  			= { "ghostty", NULL };
-static const char 				*termcmd3[]  			= { "st", NULL };
+static const char 				*termcmd[]  			= { "st", NULL };
 
 /* Window rules*/
 
@@ -204,14 +204,11 @@ static const Rule 				rules[] 				= {
 	/* tag 3 */
 
 	{ "Gimp",                                 	NULL,  		NULL,  	1 << 3, 	0, 			-1 },
+	{ "ai.storyteller.photocraft",              NULL,  		NULL,  	1 << 3, 	0, 			-1 },
 
 	/* tag 4 */
 
 	{ "obsidian",                             	NULL,  		NULL,  	1 << 4, 	0, 			-1 },
-	{ "WebApp-Minotes2102",                     NULL,  		NULL,  	1 << 4, 	0, 			-1 },
-	{ "WebApp-ArabicNotes2658",                 NULL,  		NULL,  	1 << 4, 	0, 			-1 },
-	{ "WebApp-Notes7889",                 		NULL,  		NULL,  	1 << 4, 	0, 			-1 },
-	{ "WebApp-StickyNotes2373",                 NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "marknote",	                    		NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 	{ "MGlow",		                    		NULL,  		NULL,  	1 << 4, 	0, 			-1 },
 
@@ -223,11 +220,6 @@ static const Rule 				rules[] 				= {
 
 	{ "TelegramDesktop",                      	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 	{ "org.signal.Signal",                      NULL,  		NULL,  	1 << 6, 	0, 			-1 },
-	{ "WebApp-ChatGPT5627",                     NULL,  		NULL,  	1 << 6, 	0, 			-1 },
-	{ "WebApp-DeepSeek9423",                    NULL,  		NULL,  	1 << 6, 	0, 			-1 },
-	{ "WebApp-Claude7033",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
-	{ "WebApp-Gemini9268",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
-	{ "WebApp-ChatGPT2320",                    	NULL,  		NULL,  	1 << 6, 	0, 			-1 },
 
 	/* tag 7 */
 	
@@ -245,14 +237,13 @@ static const Rule 				rules[] 				= {
 	{ "io.github.celluloid_player.Celluloid", 	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 	{ "mpv",                                  	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 	{ "vlc",                                  	NULL,  		NULL,  	1 << 8, 	0, 			-1 },
-	{ "WebApp-MyTube5416",                      NULL,  		NULL,  	1 << 8, 	0, 			-1 },
 
 	/* tag 9 */
 
 	{ "Org.gnome.Evolution",                  	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
+	{ "Geary",                  				NULL,  		NULL,  	1 << 9, 	0, 			-1 },
 	{ "gnome-calendar",                       	NULL,  		NULL,  	1 << 9, 	0, 			-1 },
 	{ "com.tui.cal",                       		NULL,  		NULL,  	1 << 9, 	0, 			-1 },
-	{ "WebApp-Tasks2144",                       NULL,  		NULL,  	1 << 9, 	0, 			-1 },
 };
 
 /* Keys combinitions */
