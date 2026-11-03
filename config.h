@@ -167,15 +167,16 @@ static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 															col_gray4,
 															NULL };
 
-static const char 				*termcmd3[]  			= { "xfce4-terminal", NULL };
-static const char 				*termcmd2[]  			= { "ghostty", NULL };
 static const char 				*termcmd[]  			= { "st", NULL };
+static const char 				*termcmd2[]  			= { "ghostty", NULL };
+static const char 				*termcmd3[]  			= { "xfce4-terminal", NULL };
+
 static const char 				scratchpadname[] 		= "scratchpad";
 static const char 				*scratchpadcmd[] 		= { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
 /* second scratchpad: runs a command inside st (-e), edit the command to taste */
 static const char 				scratchpad2name[] 		= "scratchpad2";
-static const char 				*scratchpad2cmd[] 		= { "st", "-t", scratchpad2name, "-g", "120x34", "-e", "htop", NULL };
+static const char 				*scratchpad2cmd[] 		= { "st", "-t", scratchpad2name, "-g", "120x34", "-e", "/home/marwa/.config/dwm/hotkeys/hotkeys.py", NULL };
 
 /* all scratchpads: window title to match + command that launches it */
 static const Scratchpad 		scratchpads[] 			= {
@@ -265,8 +266,8 @@ static const Key 				keys[] 					= {
 	/* modifier                     key        function        	argument */
 
 	{ MODKEY,             			XK_Return, spawn,          	{.v = termcmd } },
-	{ MODKEY,                       XK_a,  togglescratch,       {.v = scratchpadcmd } },
-	{ MODKEY|ShiftMask,             XK_a,  togglescratch,       {.v = scratchpad2cmd } },
+	{ MODKEY|ControlMask,           XK_Return, togglescratch,   {.v = scratchpadcmd } },
+	{ MODKEY,           			XK_a,  	   togglescratch,   {.v = scratchpad2cmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          	{.v = termcmd2 } },
 	{ MODKEY|Mod1Mask,             	XK_Return, spawn,          	{.v = termcmd3 } },
 	{ MODKEY, 			            XK_r,      togglebar,      	{0} },
@@ -329,7 +330,6 @@ static const Key 				keys[] 					= {
 	{ ShiftMask,           			XK_F10,     tag,        	{.ui = 1 << 9} },
 
     { MODKEY|ShiftMask,             XK_r,      spawn,          	SHCMD("~/.config/dwm/gamma.sh") },
-	{ MODKEY|ControlMask,           XK_r,      spawn,          	SHCMD("~/.config/dwm/hotkeys/hotkeys.sh") },
 	{ MODKEY,             			XK_l,      spawn,          	SHCMD("~/.config/rofi/powermenu/type-2/powermenu.sh") },
 	{ MODKEY,             			XK_q,      spawn,          	SHCMD("~/.config/rofi/launchers/type-1/launcher.sh") },
 	{ MODKEY,             			XK_w,      spawn,          	SHCMD("brave-origin") },
@@ -340,7 +340,6 @@ static const Key 				keys[] 					= {
 	{ MODKEY|ShiftMask,             XK_y,      spawn,          	SHCMD("~/.config/dwm/killbar.sh") },
 	{ MODKEY,             			XK_b,      spawn,          	SHCMD("st -c MGlow -e glow ~/MEGA/Marwa/") },
 	{ MODKEY|ShiftMask,             XK_b,      spawn,          	SHCMD("obsidian") },
-	{ MODKEY|ControlMask,           XK_b,      spawn,          	SHCMD("flatpak run org.kde.marknote") },
 	{ MODKEY,             			XK_z,      spawn,          	SHCMD("~/.config/dwm/adw/emoji_picker.py") },
 	{ MODKEY,             			XK_o,      spawn,          	SHCMD("~/.config/dwm/adw/bluetooth.py") },
 	{ MODKEY,             			XK_v,      spawn,          	SHCMD("~/.config/dwm/yt.sh") },
