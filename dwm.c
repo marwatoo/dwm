@@ -391,8 +391,18 @@ static Drw *drw;
 static Monitor *mons, *selmon;
 static Window root, wmcheckwin;
 
+/* scratchpad definition: window title to match and the command that spawns it */
+typedef struct {
+	const char *name;
+	const char **cmd;
+} Scratchpad;
+
 /* configuration, allows nested code to access above variables */
 #include "config.h"
+
+/* each scratchpad gets its own hidden pseudo-tag bit right above the real tags */
+#define SCRATCHTAG(i)   (1u << (LENGTH(tags) + (i)))
+#define SCRATCHMASK     (((1u << LENGTH(scratchpads)) - 1) << LENGTH(tags))
 
 struct Pertag {
 	unsigned int curtag, prevtag; /* current and previous tag */
@@ -403,10 +413,9 @@ struct Pertag {
 	int showbars[LENGTH(tags) + 1]; /* display bar for the current tag */
 };
 
-static unsigned int scratchtag = 1 << LENGTH(tags);
 
 /* compile-time check if all tags fit into an unsigned int bit array. */
-struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
+struct NumTags { char limitexceeded[LENGTH(tags) + LENGTH(scratchpads) > 31 ? -1 : 1]; };
 
 /* dwm will keep pid's of processes from autostart array and kill them at quit */
 static pid_t *autostart_pids;
@@ -1696,6 +1705,7 @@ void
 manage(Window w, XWindowAttributes *wa)
 {
 	Client *c, *t = NULL;
+	unsigned int i;
 	Window trans = None;
 	XWindowChanges wc;
 
@@ -1725,12 +1735,15 @@ manage(Window w, XWindowAttributes *wa)
 	c->y = MAX(c->y, c->mon->wy);
 	c->bw = borderpx;
 
-	selmon->tagset[selmon->seltags] &= ~scratchtag;
-	if (!strcmp(c->name, scratchpadname)) {
-		c->mon->tagset[c->mon->seltags] |= c->tags = scratchtag;
-		c->isfloating = True;
-		c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
-		c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
+	selmon->tagset[selmon->seltags] &= ~SCRATCHMASK;
+	for (i = 0; i < LENGTH(scratchpads); i++) {
+		if (!strcmp(c->name, scratchpads[i].name)) {
+			c->mon->tagset[c->mon->seltags] |= c->tags = SCRATCHTAG(i);
+			c->isfloating = True;
+			c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
+			c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
+			break;
+		}
 	}
 
 	wc.border_width = c->bw;
@@ -2134,7 +2147,7 @@ shifttag(const Arg *arg) {
 	c = selmon->sel;
 
 	/* the scratchpad lives on a hidden pseudo-tag, don't rotate it into a real tag */
-	if (c->tags & scratchtag)
+	if (c->tags & SCRATCHMASK)
 		return;
 
 	/* compute shifted tag mask */
@@ -2469,7 +2482,7 @@ spawn(const Arg *arg)
 
 	if (arg->v == dmenucmd)
 		dmenumon[0] = '0' + selmon->num;
-	selmon->tagset[selmon->seltags] &= ~scratchtag;
+	selmon->tagset[selmon->seltags] &= ~SCRATCHMASK;
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));
@@ -2578,11 +2591,20 @@ void
 togglescratch(const Arg *arg)
 {
 	Client *c;
-	unsigned int found = 0;
+	unsigned int i, idx = 0, tag, found = 0;
 
-	for (c = selmon->clients; c && !(found = c->tags & scratchtag); c = c->next);
+	/* which scratchpad is this? identified by its command array */
+	for (i = 0; i < LENGTH(scratchpads); i++)
+		if (scratchpads[i].cmd == (const char **)arg->v)
+			idx = i;
+	tag = SCRATCHTAG(idx);
+
+	for (c = selmon->clients; c && !(found = c->tags & tag); c = c->next);
 	if (found) {
-		unsigned int newtagset = selmon->tagset[selmon->seltags] ^ scratchtag;
+		unsigned int newtagset = selmon->tagset[selmon->seltags] ^ tag;
+		/* only one scratchpad is shown at a time */
+		if (newtagset & tag)
+			newtagset &= ~(SCRATCHMASK & ~tag);
 		if (newtagset) {
 			selmon->tagset[selmon->seltags] = newtagset;
 			focus(NULL);

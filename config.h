@@ -170,8 +170,18 @@ static const char 				*dmenucmd[] 			= { "dmenu_run", "-m",
 static const char 				*termcmd3[]  			= { "xfce4-terminal", NULL };
 static const char 				*termcmd2[]  			= { "ghostty", NULL };
 static const char 				*termcmd[]  			= { "st", NULL };
-static const char scratchpadname[] = "scratchpad";
-static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
+static const char 				scratchpadname[] 		= "scratchpad";
+static const char 				*scratchpadcmd[] 		= { "st", "-t", scratchpadname, "-g", "120x34", NULL };
+
+/* second scratchpad: runs a command inside st (-e), edit the command to taste */
+static const char 				scratchpad2name[] 		= "scratchpad2";
+static const char 				*scratchpad2cmd[] 		= { "st", "-t", scratchpad2name, "-g", "120x34", "-e", "htop", NULL };
+
+/* all scratchpads: window title to match + command that launches it */
+static const Scratchpad 		scratchpads[] 			= {
+														{ scratchpadname,  scratchpadcmd  },
+														{ scratchpad2name, scratchpad2cmd },
+};
 
 /* Window rules*/
 
@@ -256,6 +266,7 @@ static const Key 				keys[] 					= {
 
 	{ MODKEY,             			XK_Return, spawn,          	{.v = termcmd } },
 	{ MODKEY,                       XK_a,  togglescratch,       {.v = scratchpadcmd } },
+	{ MODKEY|ShiftMask,             XK_a,  togglescratch,       {.v = scratchpad2cmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          	{.v = termcmd2 } },
 	{ MODKEY|Mod1Mask,             	XK_Return, spawn,          	{.v = termcmd3 } },
 	{ MODKEY, 			            XK_r,      togglebar,      	{0} },
