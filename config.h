@@ -171,17 +171,26 @@ static const char 				*termcmd[]  			= { "st", NULL };
 static const char 				*termcmd2[]  			= { "ghostty", NULL };
 static const char 				*termcmd3[]  			= { "xfce4-terminal", NULL };
 
-static const char 				scratchpadname[] 		= "scratchpad";
+static const char 				scratchpadname[] 		= "Terminal";
 static const char 				*scratchpadcmd[] 		= { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
-/* second scratchpad: runs a command inside st (-e), edit the command to taste */
-static const char 				scratchpad2name[] 		= "scratchpad2";
+/* scratchpads */
+static const char 				scratchpad2name[] 		= "Hotkeys";
 static const char 				*scratchpad2cmd[] 		= { "st", "-t", scratchpad2name, "-g", "120x34", "-e", "/home/marwa/.config/dwm/hotkeys/hotkeys.py", NULL };
+
+static const char 				scratchpad3name[] 		= "Files";
+static const char 				*scratchpad3cmd[] 		= { "st", "-t", scratchpad3name, "-g", "120x34", "-e", "spf", NULL };
+
+static const char 				scratchpad4name[] 		= "Browsers";
+static const char 				*scratchpad4cmd[] 		= { "st", "-t", scratchpad4name, "-g", "120x34", "-e", "/home/marwa/.config/dwm/browsers.py", NULL };
+
 
 /* all scratchpads: window title to match + command that launches it */
 static const Scratchpad 		scratchpads[] 			= {
 														{ scratchpadname,  scratchpadcmd  },
 														{ scratchpad2name, scratchpad2cmd },
+														{ scratchpad3name, scratchpad3cmd },
+														{ scratchpad4name, scratchpad4cmd },
 };
 
 /* Window rules*/
@@ -267,7 +276,7 @@ static const Key 				keys[] 					= {
 
 	{ MODKEY,             			XK_Return, spawn,          	{.v = termcmd } },
 	{ MODKEY|ControlMask,           XK_Return, togglescratch,   {.v = scratchpadcmd } },
-	{ MODKEY,           			XK_a,  	   togglescratch,   {.v = scratchpad2cmd } },
+	{ MODKEY|ControlMask,           XK_a,  	   togglescratch,   {.v = scratchpad2cmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          	{.v = termcmd2 } },
 	{ MODKEY|Mod1Mask,             	XK_Return, spawn,          	{.v = termcmd3 } },
 	{ MODKEY, 			            XK_r,      togglebar,      	{0} },
@@ -333,9 +342,10 @@ static const Key 				keys[] 					= {
 	{ MODKEY,             			XK_l,      spawn,          	SHCMD("~/.config/rofi/powermenu/type-2/powermenu.sh") },
 	{ MODKEY,             			XK_q,      spawn,          	SHCMD("~/.config/rofi/launchers/type-1/launcher.sh") },
 	{ MODKEY,             			XK_w,      spawn,          	SHCMD("brave-origin") },
-	{ MODKEY|ShiftMask,       		XK_w,      spawn,          	SHCMD("~/.config/rofi/applets/bin/browser.sh") },
+	{ MODKEY|ControlMask,       	XK_w,      togglescratch,   {.v = scratchpad4cmd } },
 	{ MODKEY,             			XK_e,      spawn,          	SHCMD("~/.config/dwm/files.sh") },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          	SHCMD("thunar ~") },
+	{ MODKEY|ControlMask,           XK_e,      togglescratch,   {.v = scratchpad3cmd } },
 	{ MODKEY,             			XK_y,      spawn,          	SHCMD("~/.config/dwm/switch.sh") },
 	{ MODKEY|ShiftMask,             XK_y,      spawn,          	SHCMD("~/.config/dwm/killbar.sh") },
 	{ MODKEY,             			XK_b,      spawn,          	SHCMD("st -c MGlow -e glow ~/MEGA/Marwa/") },
