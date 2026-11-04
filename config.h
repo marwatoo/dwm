@@ -33,7 +33,6 @@ static const int 				sidepad            		= 12;       /* horizontal padding of b
 static const char 				*fonts[]          		= { 		
 															"JetBrainsMonoNL NFP:style=Bold:size=14:antialias=true:hinting=true:hintstyle=hintfull",
 															"Symbola:size=14:style=Bold:antialias=true:autohint=true",
-//															"Noto Color Emoji:size=14:antialias=true:autohint=true",
 															"Noto Sans Arabic:size=14:style=Bold" };
 
 static const char 				dmenufont[]       		= "JetBrainsMonoNL NFP:style=Bold:size=13";
