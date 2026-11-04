@@ -4,11 +4,11 @@
 
 **A personalized build of [dwm](https://dwm.suckless.org) 6.8 — the dynamic window manager**
 
-*Gaps · Systray · RTL/Arabic support · Fibonacci layouts · Custom AI-assisted patches*
+*Gaps · Systray · RTL/Arabic support · Fibonacci layouts · Scratchpads · Custom AI-assisted patches*
 
 ![C](https://img.shields.io/badge/C-89.5%25-blue?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
-![dwm](https://img.shields.io/badge/based%20on-dwm%206.6-black?style=flat-square)
+![dwm](https://img.shields.io/badge/based%20on-dwm%206.8-black?style=flat-square)
 
 ![dwm screenshot](dwm.png)
 
@@ -20,7 +20,7 @@
 
 ## About
 
-This is my personal fork of **dwm**, patched by hand and with the help of AI (mainly inside `dwm.c` and `drw.c`) to fit my daily workflow: Arabic/RTL text support in the bar, gaps, a system tray, custom stack rotation, and several quality-of-life tweaks that vanilla dwm doesn't ship with.
+This is my personal fork of **dwm**, patched by hand and with the help of AI (mainly inside `dwm.c` and `drw.c`) to fit my daily workflow: Arabic/RTL text support in the bar, gaps, a system tray, custom stack rotation, multiple scratchpads, and several quality-of-life tweaks that vanilla dwm doesn't ship with.
 
 It's not meant to be a general-purpose distribution — it's tuned for my machine, my fonts, and my keybindings — but everything below is documented so you (or future me) can understand exactly what changed and why.
 
@@ -53,11 +53,12 @@ Every item below was verified directly against the source (`dwm.c`, `drw.c`, `co
 | **Pertag** | Each tag remembers its own layout, `mfact`, and `nmaster` independently (`struct Pertag`). |
 | **Fibonacci layouts** | Adds `dwindle` and `spiral` arrangements on top of the stock `tile`/`monocle`/floating layouts. |
 | **Rotate Stack** (AI-assisted) | `rotatestack()` cycles the tiled client order forward/backward (bound to `MOD+s` / `MOD+d`), built on custom `enqueue()`, `enqueuestack()`, and `prepend()` helpers. |
-| **Shift View / Shift Tag** | `shiftview()` / `shifttag()` let you cycle to the adjacent tag or move a client to it (`MOD+←/→`, `MOD+SHIFT+←/→`). |
+| **Shift View / Shift Tag** | `shiftview()` / `shifttag()` let you cycle to the adjacent tag or move a client to it (`MOD+←/→`, `MOD+SHIFT+←/→`). Scratchpad-aware: the hidden scratchpad bit is ignored when shifting. |
 | **Aspect Resize** (AI-assisted) | `aspectresize()` resizes the focused floating window while preserving its current aspect ratio (`MOD+CTRL+h/l`). |
 | **Lock Fullscreen** | `lockfullscreen` keeps focus pinned to a fullscreen client instead of leaking to others. |
 | **Focus on Wheel toggle** | `focusonwheel` lets you disable focus-follows-scroll on mouse wheel events. |
 | **i3 layout** (AI-assisted) | `i3layout` arrangement. |
+| **Scratchpads** (AI-assisted) | Four toggleable floating `st` windows — **Terminal**, **Hotkeys**, **Files** (Superfile) and **Browsers** — defined in the `scratchpads[]` array in `config.h` and handled by `togglescratch()`. Each one is matched by its window title, centered and floated on spawn, and lives on its own hidden pseudo-tag bit above the real tags (`SCRATCHTAG(i)` / `SCRATCHMASK`). Pressing the key spawns the scratchpad if it isn't running, otherwise shows/hides it; only one scratchpad is visible at a time. The tag-handling code (`view`, `toggleview`, `tag`, `shiftview`, `shifttag`, `spawn`) masks these pseudo-tag bits out so they never get rotated into a real tag or counted as a selected one. A compile-time check ensures tags + scratchpads fit in 31 bits. |
 
 ### Bar & Visuals
 
@@ -66,7 +67,7 @@ Every item below was verified directly against the source (`dwm.c`, `drw.c`, `co
 | **System Tray** | Full systray implementation (`Systray` struct, `updatesystray()`, XEMBED handling) with `systraypinning`, `systrayonleft`, and `systrayspacing` options. |
 | **Bar Padding (vanity gaps)** | `vertpad` / `sidepad` add vertical and horizontal breathing room around the bar. |
 | **Colored / Scriptable Status Bar** | `drawstatusbar()` renders the status text with custom drawing logic instead of the stock single-color `drawbar` text path. Status text is fed by either [marwatoo/slstatus](https://github.com/marwatoo/slstatus) or [marwatoo/dwmblocks](https://github.com/marwatoo/dwmblocks), switched between depending on need. |
-| **Underline Tags** | Active/urgent tags are rendered with an underline accent instead of (or alongside) a filled background, controlled by `ulinestroke` and `ulinevoffset` and dedicated color schemes (`SchemeTagUnderline`, `SchemeTagUrgUnderline`, `SchemeTagUnderlineSel`). |
+| **Underline Tags** (AI-assisted) | Selected, occupied and urgent tags are drawn with an underline accent under the tag label, controlled by `ulinestroke` and `ulinevoffset` and dedicated color schemes (`SchemeTagUnderline`, `SchemeTagUrgUnderline`, `SchemeTagUnderlineSel`). The underline and tag-selection logic was fixed with AI assistance, and scratchpad pseudo-tag bits are never drawn as tags or underlined. |
 | **Extended Color Schemes** | Beyond stock `SchemeNorm`/`SchemeSel`, adds `SchemeTitle`, `SchemeTag`, `SchemeTagSel`, `SchemeTagUrg`, and `SchemeTagEmpty` for fully independent tag/title styling. |
 | **Multiple Theme Palettes** | Ready-made Breeze Dark, Dracula, and Vimix (light & dark) color palettes defined in `config.h`, swappable via the `colors[]` mapping. |
 
@@ -80,7 +81,7 @@ Every item below was verified directly against the source (`dwm.c`, `drw.c`, `co
 
 | Patch | Description |
 |---|---|
-| **Autostart** | An `autostart[]` command array (`config.h`) is executed on startup via `autostart_exec()`, and every spawned PID is tracked and killed cleanly on `dwm` exit. |
+| **Autostart** | An `autostart[]` command array (`config.h`) is executed on startup via `autostart_exec()`, and every spawned PID is tracked and killed cleanly on `dwm` exit. In this build it runs a single entry, `~/.config/dwm/start.sh`, which launches the whole session (see [Autostart script](#autostart-script-startsh)). |
 
 ---
 
@@ -127,14 +128,38 @@ The bar's status text comes from an external program feeding `xsetroot -name`. T
 - **[marwatoo/slstatus](https://github.com/marwatoo/slstatus)** — a custom-built [slstatus](https://tools.suckless.org/slstatus/), lightweight, polls system info directly.
 - **[marwatoo/dwmblocks](https://github.com/marwatoo/dwmblocks)** — modular, block-based, updates individual segments on signal.
 
-Only one should be running in `autostart` at a time. Example using slstatus-style polling:
+Only one should be running at a time. Currently `slstatus` is the one started from `start.sh`; to switch to dwmblocks, replace the `slstatus &` line with `dwmblocks &`.
+
+### Autostart script (`start.sh`)
+
+`autostart[]` in `config.h` runs one command, `"$HOME/.config/dwm/start.sh"`, and that script starts everything else. My current `start.sh`:
 
 ```bash
-while xsetroot -name "`date` `uptime | sed 's/.*,//'`"
-do
-    sleep 1
-done &
-exec dwm
+nitrogen --restore &
+picom --config ~/.config/picom/dwm.conf &
+libinput-gestures-setup start &
+setxkbmap -option grp:caps_toggle fr,ma &
+xset b off &
+lxpolkit &
+/usr/lib/x86_64-linux-gnu/xfce4/notifyd/xfce4-notifyd &
+nm-applet &
+parcellite &
+gxkb &
+xfce4-power-manager &
+xfce4-screensaver &
+blueman-applet &
+slstatus &
+pnmixer &
+```
+
+What it does: restores the wallpaper (nitrogen) and starts the compositor (picom), touchpad gestures, the polkit agent, notifications, and the tray applets (network, clipboard, keyboard layout, power, bluetooth, volume). It also sets the keyboard layouts to French and Moroccan Arabic (`fr,ma`), toggled with <kbd>Caps Lock</kbd>, and turns off the terminal bell (`xset b off`). Finally it starts `slstatus` for the bar text.
+
+Put it at `~/.config/dwm/start.sh` and make it executable:
+
+```bash
+mkdir -p ~/.config/dwm
+cp start.sh ~/.config/dwm/start.sh
+chmod +x ~/.config/dwm/start.sh
 ```
 
 ## Configuration
@@ -149,9 +174,11 @@ Key sections worth knowing about:
 
 - **`fonts[]`** — font stack: Jetbrains nerd font, Arabic fallback, emoji fallback.
 - **`colors[]`** — active theme; swap in any of the Breeze Dark / Dracula / Vimix palettes defined above it.
-- **`autostart[]`** — programs launched on session start (compositor, wallpaper, tray apps, etc.).
+- **`autostart[]`** — launches `~/.config/dwm/start.sh`; edit that script to change which programs start with the session (compositor, wallpaper, tray apps, status bar).
 - **`rules[]`** — per-application tag/floating/monitor placement.
 - **`layouts[]`** — order and icons for `dwindle`, `tile`, `monocle`, floating, `spiral` and `i3layout`.
+- **`scratchpads[]`** — window title + launch command for each scratchpad. To add one, define a name and `cmd` array, append it to `scratchpads[]`, and bind a key to `togglescratch` with `{.v = yourcmd }`. Note that the `Hotkeys` and `Browsers` commands point at personal scripts under `/home/marwa/.config/dwm/`, so adjust the paths for your system.
+- **`ulinestroke` / `ulinevoffset`** — thickness and vertical offset of the tag underline.
 
 ## Keybindings
 
@@ -162,8 +189,13 @@ Key sections worth knowing about:
 
 | Keys | Action |
 |---|---|
-| `MOD + Return` | Open terminal (`ghostty`) |
-| `MOD + SHIFT + Return` | Open secondary terminal (`xfce4-terminal`) |
+| `MOD + Return` | Open terminal (`st`) |
+| `MOD + SHIFT + Return` | Open secondary terminal (`ghostty`) |
+| `MOD + ALT + Return` | Open fallback terminal (`xfce4-terminal`) |
+| `MOD + CTRL + Return` | Toggle **Terminal** scratchpad |
+| `MOD + CTRL + a` | Toggle **Hotkeys** scratchpad |
+| `MOD + CTRL + e` | Toggle **Files** scratchpad (Superfile) |
+| `MOD + CTRL + w` | Toggle **Browsers** scratchpad |
 | `MOD + r` | Toggle bar |
 | `MOD + ←` / `→` | Shift view to adjacent tag |
 | `MOD + SHIFT + ←` / `→` | Shift focused client to adjacent tag |
@@ -174,7 +206,7 @@ Key sections worth knowing about:
 | `MOD + CTRL + h` / `l` | Aspect-ratio resize (floating windows) |
 | `MOD + Tab` | View previously selected tag |
 | `MOD + ALT + c` | Kill focused client |
-| `MOD + ALT + s/d/f/m/i` | Set layout: dwindle / tile / monocle / floating / i3 |
+| `MOD + ALT + s/d/f/m/o/i` | Set layout: dwindle / tile / monocle / floating / spiral / i3 |
 | `MOD + Space` | Cycle layout |
 | `MOD + SHIFT + Space` | Toggle floating |
 | `F1`–`F10` | View tag 1–10 |
@@ -202,7 +234,6 @@ Key sections worth knowing about:
 ├── drw.c / drw.h       # Drawing/font/color abstraction library
 ├── transient.c         # Transient window helper
 ├── util.c / util.h     # Shared utility functions
-├── keys.sh             # Keybinding reference/helper script
 ├── dwm.1               # Man page
 ├── dwm.png             # Screenshot
 └── screen.png           # Desktop screenshot
@@ -222,14 +253,14 @@ paired with, and where each one comes from on Debian 13 (trixie).
 ### Tray / applets
 
 - **xfce4-notifyd** — notifications
-- **nm-tray** — network tray
+- **nm-applet** — network tray
 - **xfce4-screensaver** — screensaver
 - **xfce4-power-manager** — power management
 - **pnmixer** — volume tray icon
 - **blueman-applet** — bluetooth tray
-- **xfce4-clipman** — clipboard tray icon
+- **parcellite** — clipboard manager tray icon
+- **gxkb** — keyboard layout indicator (layouts `fr` and `ma`, set in `start.sh`)
 - **lxpolkit** — polkit agent, handles root password prompts for GUI apps
-- **kdeconnect indicator** — tray indicator for KDE Connect
 
 ### Appearance / input
 
@@ -274,7 +305,8 @@ sudo apt install \
   xfce4-screensaver \
   xfce4-power-manager \
   blueman \
-  xfce4-clipman \
+  parcellite \
+  gxkb \
   lxpolkit \
   lxappearance \
   picom \
@@ -282,9 +314,8 @@ sudo apt install \
   thunar \
   xfce4-terminal \
   fonts-symbola \
-  nm-tray \
+  network-manager-gnome \
   pnmixer \
-  kdeconnect \
   stterm \
   fonts-noto-core
 ```
@@ -335,7 +366,7 @@ unzip JetBrainsMono.zip -d JetBrainsMono
 fc-cache -fv
 ```
 
-> Note: `nm-tray`, `pnmixer`, and `indicator-kdeconnect` may pull in extra
+> Note: `pnmixer` and the other tray applets may pull in extra
 > `-dev` libraries not listed above depending on your system — if
 > `cmake`/`configure` complains about a missing dependency, install it via
 > `apt` and re-run.
@@ -355,7 +386,7 @@ This dwm build is one piece of a small suckless-based setup. The status bar's co
 
 - [suckless.org](https://dwm.suckless.org) — original dwm
 - The dwm patch community, whose ideas (gaps, systray, pertag, fibonacci layouts) shaped several features above
-- AI-assisted development for the custom patches marked (AI-assisted) (rotate stack, aspect resize, RTL/FriBidi bar rendering)
+- AI-assisted development for the custom patches marked (AI-assisted) (rotate stack, aspect resize, i3 layout, RTL/FriBidi bar rendering, scratchpads, and the underline / tag-selection fixes)
 
 ---
 
