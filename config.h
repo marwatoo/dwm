@@ -183,6 +183,16 @@ static const char 				*scratchpad3cmd[] 		= { "st", "-t", scratchpad3name, "-g",
 static const char 				scratchpad4name[] 		= "Browsers";
 static const char 				*scratchpad4cmd[] 		= { "st", "-t", scratchpad4name, "-g", "120x34", "-e", "/home/marwa/.config/dwm/browsers.py", NULL };
 
+static const char 				scratchpad5name[] 		= "Bluetooth";
+static const char 				*scratchpad5cmd[] 		= { "st", "-t", scratchpad5name, "-g", "120x34", "-e", "/home/marwa/.config/dwm/btui.py", NULL };
+
+static const char 				scratchpad6name[] 		= "Emoji";
+static const char 				*scratchpad6cmd[] 		= { "ghostty",
+    													"--title=scratchpad6name_here",   /* see note below */
+    													"--window-width=120", "--window-height=34",
+    													"--gtk-single-instance=false",
+    													"--confirm-close-surface=false",
+    													"-e", "/home/marwa/.config/dwm/emoji_tui.py", NULL };
 
 /* all scratchpads: window title to match + command that launches it */
 static const Scratchpad 		scratchpads[] 			= {
@@ -190,6 +200,8 @@ static const Scratchpad 		scratchpads[] 			= {
 														{ scratchpad2name, scratchpad2cmd },
 														{ scratchpad3name, scratchpad3cmd },
 														{ scratchpad4name, scratchpad4cmd },
+														{ scratchpad5name, scratchpad5cmd },
+														{ scratchpad6name, scratchpad6cmd },
 };
 
 /* Window rules*/
@@ -349,8 +361,8 @@ static const Key 				keys[] 					= {
 	{ MODKEY|ShiftMask,             XK_y,      spawn,          	SHCMD("~/.config/dwm/killbar.sh") },
 	{ MODKEY,             			XK_b,      spawn,          	SHCMD("st -c MGlow -e glow ~/MEGA/Marwa/") },
 	{ MODKEY|ShiftMask,             XK_b,      spawn,          	SHCMD("obsidian") },
-	{ MODKEY,             			XK_z,      spawn,          	SHCMD("~/.config/dwm/adw/emoji_picker.py") },
-	{ MODKEY,             			XK_o,      spawn,          	SHCMD("~/.config/dwm/adw/bluetooth.py") },
+	{ MODKEY|ControlMask,           XK_z,      togglescratch,   {.v = scratchpad6cmd } },
+	{ MODKEY|ControlMask,           XK_o,      togglescratch,   {.v = scratchpad5cmd } },
 	{ MODKEY,             			XK_v,      spawn,          	SHCMD("~/.config/dwm/yt.sh") },
 	{ MODKEY|ShiftMask,             XK_v,      spawn,          	SHCMD("pavucontrol-qt") },
 	{ MODKEY,             			XK_x,      spawn,          	SHCMD("~/.config/dwm/nvim.sh") },
