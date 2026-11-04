@@ -170,7 +170,7 @@ static const char 				*termcmd[]  			= { "st", NULL };
 static const char 				*termcmd2[]  			= { "ghostty", NULL };
 static const char 				*termcmd3[]  			= { "xfce4-terminal", NULL };
 
-static const char 				scratchpadname[] 		= "Terminal";
+static const char 				scratchpadname[] 		= "scratch Term";
 static const char 				*scratchpadcmd[] 		= { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
 /* scratchpads */
@@ -187,12 +187,7 @@ static const char 				scratchpad5name[] 		= "Bluetooth";
 static const char 				*scratchpad5cmd[] 		= { "st", "-t", scratchpad5name, "-g", "120x34", "-e", "/home/marwa/.config/dwm/btui.py", NULL };
 
 static const char 				scratchpad6name[] 		= "Emoji";
-static const char 				*scratchpad6cmd[] 		= { "ghostty",
-    													"--title=scratchpad6name_here",   /* see note below */
-    													"--window-width=120", "--window-height=34",
-    													"--gtk-single-instance=false",
-    													"--confirm-close-surface=false",
-    													"-e", "/home/marwa/.config/dwm/emoji_tui.py", NULL };
+static const char 				*scratchpad6cmd[] 		= { "st", "-t", scratchpad6name, "-g", "120x34", "-e", "/home/marwa/.config/dwm/emoji_tui.py", NULL };
 
 /* all scratchpads: window title to match + command that launches it */
 static const Scratchpad 		scratchpads[] 			= {
